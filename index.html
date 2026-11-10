@@ -9,65 +9,97 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background-color: #020617; color: #f8fafc; padding-bottom: 110px; }
+    
+    /* Variáveis de Tema */
+    :root {
+      --bg-body: #020617;
+      --bg-header: rgba(15, 23, 42, 0.95);
+      --bg-card: #0f172a;
+      --bg-input: #020617;
+      --bg-nav: #0b1329;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #1e293b;
+      --border-focus: #10b981;
+      --card-shadow: rgba(0,0,0,0.5);
+    }
+
+    body.light-theme {
+      --bg-body: #f1f5f9;
+      --bg-header: rgba(255, 255, 255, 0.95);
+      --bg-card: #ffffff;
+      --bg-input: #f8fafc;
+      --bg-nav: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #cbd5e1;
+      --border-focus: #059669;
+      --card-shadow: rgba(0,0,0,0.06);
+    }
+
+    body { background-color: var(--bg-body); color: var(--text-main); padding-bottom: 110px; transition: background-color 0.2s, color 0.2s; }
 
     /* Topbar */
-    header { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(8px); border-bottom: 1px solid #1e293b; position: sticky; top: 0; z-index: 40; padding: 12px 16px; }
+    header { background: var(--bg-header); backdrop-filter: blur(8px); border-bottom: 1px solid var(--border-color); position: sticky; top: 0; z-index: 40; padding: 12px 16px; }
     .topbar-content { max-width: 480px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
     .logo-box { display: flex; align-items: center; gap: 10px; }
     .logo-badge { width: 34px; height: 34px; background: #10b981; border-radius: 8px; color: #020617; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 16px; }
     .logo-text h1 { font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px; }
     .pro-tag { background: rgba(16, 185, 129, 0.2); color: #34d399; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 800; }
-    .logo-text p { font-size: 11px; color: #94a3b8; }
-    .btn-planos { background: #1e293b; border: 1px solid #334155; color: #f1f5f9; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .logo-text p { font-size: 11px; color: var(--text-muted); }
+    
+    .topbar-actions { display: flex; align-items: center; gap: 8px; }
+    .btn-planos { background: var(--border-color); border: 1px solid var(--border-color); color: var(--text-main); padding: 6px 10px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
+    .btn-gear { background: var(--border-color); border: 1px solid var(--border-color); color: var(--text-main); width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; cursor: pointer; }
 
     /* Container Principal */
     main { max-width: 480px; margin: 0 auto; padding: 16px; position: relative; z-index: 10; }
-    .card { background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); }
+    .card { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: 0 10px 25px -5px var(--card-shadow); }
     .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .card-title { font-size: 15px; font-weight: 700; color: #fff; }
-    .pill { background: #1e293b; color: #94a3b8; font-size: 10px; padding: 3px 8px; border-radius: 20px; font-weight: 600; }
-    .card-desc { font-size: 12px; color: #94a3b8; margin-bottom: 14px; line-height: 1.4; }
+    .card-title { font-size: 15px; font-weight: 700; color: var(--text-main); }
+    .pill { background: var(--border-color); color: var(--text-muted); font-size: 10px; padding: 3px 8px; border-radius: 20px; font-weight: 600; }
+    .card-desc { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; line-height: 1.4; }
 
     /* Seletores Pílula */
-    .selector-label { display: block; font-size: 11px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px; }
-    .pill-group { display: flex; gap: 6px; margin-bottom: 12px; background: #020617; padding: 4px; border-radius: 10px; border: 1px solid #1e293b; }
-    .pill-btn { flex: 1; background: transparent; border: none; color: #94a3b8; padding: 8px 4px; font-size: 11px; font-weight: 700; border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.15s ease; }
+    .selector-label { display: block; font-size: 11px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
+    .pill-group { display: flex; gap: 6px; margin-bottom: 12px; background: var(--bg-input); padding: 4px; border-radius: 10px; border: 1px solid var(--border-color); }
+    .pill-btn { flex: 1; background: transparent; border: none; color: var(--text-muted); padding: 8px 4px; font-size: 11px; font-weight: 700; border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.15s ease; }
     .pill-btn.active { background: #10b981; color: #020617; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3); }
 
     /* Formulários */
     .form-group { margin-bottom: 12px; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    label { display: block; font-size: 11px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px; }
-    input, select { width: 100%; background: #020617; border: 1px solid #334155; border-radius: 10px; padding: 12px; color: #fff; font-size: 14px; outline: none; }
-    input:focus, select:focus { border-color: #10b981; }
+    label { display: block; font-size: 11px; font-weight: 600; color: var(--text-main); margin-bottom: 6px; }
+    input, select { width: 100%; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; color: var(--text-main); font-size: 14px; outline: none; }
+    input:focus, select:focus { border-color: var(--border-focus); }
     input[type="file"] { font-size: 12px; padding: 8px; }
 
     /* Botões */
     .btn-action { display: block; width: 100%; text-align: center; border: none; border-radius: 10px; font-size: 13px; font-weight: 700; padding: 14px; cursor: pointer; user-select: none; }
     .btn-action:active { transform: scale(0.98); opacity: 0.9; }
     .btn-emerald { background: #10b981; color: #020617; margin-top: 8px; }
-    .btn-secondary { background: #1e293b; border: 1px solid rgba(16, 185, 129, 0.3); color: #34d399; margin-top: 10px; font-weight: 600; font-size: 12px; }
+    .btn-secondary { background: var(--border-color); border: 1px solid rgba(16, 185, 129, 0.3); color: #10b981; margin-top: 10px; font-weight: 600; font-size: 12px; }
     .btn-download { background: #3b82f6; color: #ffffff; margin-top: 10px; }
     .btn-purple { background: #8b5cf6; color: #ffffff; margin-top: 10px; }
+    .btn-danger { background: #ef4444; color: #ffffff; margin-top: 10px; }
 
     /* Resultados */
-    .result-box { background: linear-gradient(135deg, #0f172a, #09101f); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
-    .result-title { font-size: 11px; font-weight: 800; color: #34d399; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-    .result-status { font-size: 12px; color: #cbd5e1; margin-bottom: 12px; line-height: 1.4; }
+    .result-box { background: var(--bg-card); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
+    .result-title { font-size: 11px; font-weight: 800; color: #10b981; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+    .result-status { font-size: 12px; color: var(--text-main); margin-bottom: 12px; line-height: 1.4; }
     .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .result-item { background: rgba(2, 6, 23, 0.8); border: 1px solid #1e293b; border-radius: 10px; padding: 10px; }
-    .result-item span { font-size: 10px; color: #94a3b8; display: block; margin-bottom: 4px; }
-    .result-item strong { font-size: 15px; font-weight: 700; color: #fff; }
-    .result-item strong.highlight { color: #34d399; }
-    .disclaimer { font-size: 10px; color: #64748b; line-height: 1.4; margin-top: 12px; }
+    .result-item { background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px; }
+    .result-item span { font-size: 10px; color: var(--text-muted); display: block; margin-bottom: 4px; }
+    .result-item strong { font-size: 15px; font-weight: 700; color: var(--text-main); }
+    .result-item strong.highlight { color: #10b981; }
+    .disclaimer { font-size: 10px; color: var(--text-muted); line-height: 1.4; margin-top: 12px; }
 
     /* Script Box */
-    .script-box { background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px; font-size: 12px; color: #cbd5e1; line-height: 1.5; white-space: pre-line; font-family: monospace; margin: 10px 0; }
+    .script-box { background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px; font-size: 12px; color: var(--text-main); line-height: 1.5; white-space: pre-line; font-family: monospace; margin: 10px 0; }
 
-    /* Vitrine Card Interativa */
-    #card-export-area { background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; overflow: hidden; margin-top: 12px; user-select: none; }
-    .vitrine-img-container { height: 230px; background: #020617; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: pan-y; }
+    /* Vitrine Card */
+    #card-export-area { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 16px; overflow: hidden; margin-top: 12px; user-select: none; }
+    .vitrine-img-container { height: 230px; background: #000; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: pan-y; }
     .vitrine-img { width: 100%; height: 100%; object-fit: cover; }
     .vitrine-badge { position: absolute; top: 12px; left: 12px; background: #10b981; color: #020617; font-size: 9px; font-weight: 900; padding: 4px 8px; border-radius: 6px; z-index: 5; }
     .vitrine-counter { position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); color: #fff; font-size: 10px; padding: 3px 8px; border-radius: 12px; z-index: 5; }
@@ -76,25 +108,25 @@
     .slide-arrow.prev { left: 8px; }
     .slide-arrow.next { right: 8px; }
     
-    .gallery-dots { display: flex; gap: 6px; justify-content: center; padding: 8px; background: #0b1329; }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: #334155; cursor: pointer; transition: all 0.2s; }
+    .gallery-dots { display: flex; gap: 6px; justify-content: center; padding: 8px; background: var(--bg-input); }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border-color); cursor: pointer; transition: all 0.2s; }
     .dot.active { background: #10b981; width: 18px; border-radius: 4px; }
     
     .vitrine-body { padding: 16px; }
     .vitrine-title-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
-    .vitrine-title-row h4 { font-size: 15px; font-weight: 700; color: #fff; }
-    .vitrine-price { color: #34d399; font-weight: 900; font-size: 16px; white-space: nowrap; }
-    .vitrine-loc { font-size: 11px; color: #94a3b8; margin-bottom: 10px; }
+    .vitrine-title-row h4 { font-size: 15px; font-weight: 700; color: var(--text-main); }
+    .vitrine-price { color: #10b981; font-weight: 900; font-size: 16px; white-space: nowrap; }
+    .vitrine-loc { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; }
     .tags-container { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
-    .tag-item { background: #1e293b; color: #cbd5e1; font-size: 10px; padding: 4px 8px; border-radius: 4px; }
+    .tag-item { background: var(--border-color); color: var(--text-main); font-size: 10px; padding: 4px 8px; border-radius: 4px; }
     
-    .corretor-footer { border-top: 1px dashed #334155; padding-top: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #cbd5e1; }
-    .corretor-footer strong { color: #fff; }
+    .corretor-footer { border-top: 1px dashed var(--border-color); padding-top: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text-main); }
+    .corretor-footer strong { color: var(--text-main); }
 
     /* Barra Inferior */
-    nav { position: fixed; bottom: 0; left: 0; right: 0; background: #0b1329; border-top: 1px solid #1e293b; z-index: 999; padding-bottom: env(safe-area-inset-bottom, 0px); }
+    nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-nav); border-top: 1px solid var(--border-color); z-index: 999; padding-bottom: env(safe-area-inset-bottom, 0px); }
     .nav-container { max-width: 480px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; padding: 8px 12px; }
-    .nav-btn { background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; color: #64748b; font-size: 11px; font-weight: 600; cursor: pointer; padding: 8px 0; }
+    .nav-btn { background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--text-muted); font-size: 11px; font-weight: 600; cursor: pointer; padding: 8px 0; }
     .nav-btn.active { color: #10b981; }
     .nav-icon { font-size: 18px; margin-bottom: 2px; }
 
@@ -102,20 +134,34 @@
     .toast { position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%) translateY(20px); background: #10b981; color: #020617; padding: 10px 18px; border-radius: 8px; font-size: 12px; font-weight: 700; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 1000; max-width: 90%; text-align: center; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
+    /* MODAL DE CONFIGURAÇÕES / PERFIL */
+    #settings-modal, #profile-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(4px); z-index: 2000; align-items: center; justify-content: center; padding: 16px; }
+    .modal-sheet { background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 18px; width: 100%; max-width: 420px; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
+    .modal-header { background: var(--bg-input); padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+    .modal-header strong { font-size: 14px; color: var(--text-main); }
+    .modal-close { background: none; border: none; color: var(--text-muted); font-size: 16px; cursor: pointer; }
+    .modal-body { padding: 16px; max-height: 80vh; overflow-y: auto; }
+    
+    .settings-list-item { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-color); }
+    .settings-list-item strong { font-size: 13px; color: var(--text-main); display: block; margin-bottom: 2px; }
+    .settings-list-item span { font-size: 11px; color: var(--text-muted); }
+    .settings-btn-link { background: var(--bg-input); border: 1px solid var(--border-color); color: var(--text-main); font-size: 12px; font-weight: 600; padding: 6px 12px; border-radius: 8px; cursor: pointer; }
+
     /* COPILOTO IA */
     #ia-copilot-trigger { position: fixed; right: 16px; bottom: 82px; background: linear-gradient(135deg, #10b981, #059669); color: #020617; font-size: 12px; font-weight: 800; padding: 10px 14px; border-radius: 30px; display: flex; align-items: center; gap: 6px; box-shadow: 0 8px 20px rgba(16,185,129,0.4); z-index: 998; cursor: pointer; border: none; }
-    #ia-copilot-modal { display: none; position: fixed; right: 12px; bottom: 80px; width: calc(100% - 24px); max-width: 420px; height: 500px; background: #0f172a; border: 1px solid #334155; border-radius: 18px; z-index: 1001; flex-direction: column; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
-    .ia-header { background: #1e293b; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; }
-    .ia-header strong { font-size: 13px; color: #34d399; display: flex; align-items: center; gap: 6px; }
-    .ia-close { background: none; border: none; color: #94a3b8; font-size: 16px; cursor: pointer; }
+    #ia-copilot-modal { display: none; position: fixed; right: 12px; bottom: 80px; width: calc(100% - 24px); max-width: 420px; height: 500px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 18px; z-index: 1001; flex-direction: column; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.85); }
+    .ia-header { background: var(--bg-input); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
+    .ia-header strong { font-size: 13px; color: #10b981; }
+    .ia-close { background: none; border: none; color: var(--text-muted); font-size: 16px; cursor: pointer; }
     .ia-body { flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 12px; }
-    .ia-msg { padding: 10px 12px; border-radius: 12px; max-width: 90%; line-height: 1.5; white-space: pre-line; word-break: break-word; }
-    .ia-msg.bot { background: #1e293b; color: #cbd5e1; align-self: flex-start; }
-    .ia-msg.user { background: #10b981; color: #020617; font-weight: 600; align-self: flex-end; }
-    .ia-quick-topics { display: flex; flex-wrap: wrap; gap: 5px; padding: 8px 12px; background: #0b1329; border-top: 1px solid #1e293b; }
-    .ia-chip { background: #1e293b; color: #94a3b8; font-size: 10px; padding: 4px 8px; border-radius: 12px; cursor: pointer; border: 1px solid #334155; }
-    .ia-input-row { display: flex; padding: 8px; background: #1e293b; border-top: 1px solid #334155; gap: 6px; }
-    .ia-input-row input { flex: 1; background: #020617; border: 1px solid #334155; border-radius: 8px; color: #fff; padding: 8px 10px; font-size: 12px; }
+    .ia-msg { padding: 10px 14px; border-radius: 14px; max-width: 90%; line-height: 1.5; white-space: pre-line; word-break: break-word; font-size: 12.5px; }
+    .ia-msg.bot { background: var(--border-color); color: var(--text-main); align-self: flex-start; border-bottom-left-radius: 4px; }
+    .ia-msg.user { background: #10b981; color: #020617; font-weight: 600; align-self: flex-end; border-bottom-right-radius: 4px; }
+    .ia-typing-indicator { font-size: 11px; color: var(--text-muted); font-style: italic; display: none; margin-left: 6px; }
+    .ia-quick-topics { display: flex; flex-wrap: wrap; gap: 5px; padding: 8px 12px; background: var(--bg-input); border-top: 1px solid var(--border-color); }
+    .ia-chip { background: var(--bg-card); color: var(--text-muted); font-size: 10px; padding: 5px 9px; border-radius: 12px; cursor: pointer; border: 1px solid var(--border-color); }
+    .ia-input-row { display: flex; padding: 8px; background: var(--bg-input); border-top: 1px solid var(--border-color); gap: 6px; }
+    .ia-input-row input { flex: 1; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-main); padding: 8px 10px; font-size: 12px; }
     .ia-input-row button { background: #10b981; border: none; color: #020617; font-weight: 800; border-radius: 8px; padding: 0 12px; cursor: pointer; }
 
     .hidden { display: none !important; }
@@ -133,7 +179,10 @@
           <p>Hub do Corretor de Elite</p>
         </div>
       </div>
-      <button type="button" onclick="irParaAba('planos')" class="btn-planos">👑 Planos</button>
+      <div class="topbar-actions">
+        <button type="button" onclick="irParaAba('planos')" class="btn-planos">👑 Planos</button>
+        <button type="button" onclick="abrirModalAjustes()" class="btn-gear" title="Configurações">⚙️</button>
+      </div>
     </div>
   </header>
 
@@ -316,7 +365,7 @@
         <div class="form-row">
           <div class="form-group">
             <label>Seu Nome / Imobiliária</label>
-            <input type="text" id="prop-agent" placeholder="Ex: Seu Nome ou Empresa" oninput="atualizarVitrineCard()">
+            <input type="text" id="prop-agent" placeholder="Ex: Seu Nome ou Imobiliária" oninput="atualizarVitrineCard()">
           </div>
           <div class="form-group">
             <label>Seu WhatsApp (com DDD)</label>
@@ -375,34 +424,119 @@
         </div>
         <p class="card-desc">Escolha a sua modalidade de acesso à plataforma.</p>
 
-        <div style="background: #020617; border: 1px solid #1e293b; border-radius: 12px; padding: 14px; margin-bottom: 12px;">
+        <div style="background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 12px; padding: 14px; margin-bottom: 12px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <strong>Individual Mensal</strong>
-            <span style="font-size:16px; font-weight:800; color:#fff;">R$ 59,90<small style="font-size:10px; color:#94a3b8;">/mês</small></span>
+            <span style="font-size:16px; font-weight:800; color:var(--text-main);">R$ 59,90<small style="font-size:10px; color:var(--text-muted);">/mês</small></span>
           </div>
-          <button type="button" onclick="abrirCheckout('mensal')" class="btn-action" style="background:#1e293b; color:#fff; border:1px solid #334155; margin-top:10px;">Assinar Mensal</button>
+          <button type="button" onclick="abrirCheckout('mensal')" class="btn-action" style="background:var(--border-color); color:var(--text-main); border:1px solid var(--border-color); margin-top:10px;">Assinar Mensal</button>
         </div>
 
-        <div style="background: rgba(168, 85, 247, 0.05); border: 2px solid #10b981; border-radius: 12px; padding: 14px; margin-bottom: 12px;">
+        <div style="background: rgba(16, 185, 129, 0.05); border: 2px solid #10b981; border-radius: 12px; padding: 14px; margin-bottom: 12px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
-            <strong style="color:#34d399;">Individual Anual</strong>
-            <span style="font-size:16px; font-weight:800; color:#34d399;">R$ 497,00<small style="font-size:10px; color:#94a3b8;">/ano</small></span>
+            <strong style="color:#10b981;">Individual Anual</strong>
+            <span style="font-size:16px; font-weight:800; color:#10b981;">R$ 497,00<small style="font-size:10px; color:var(--text-muted);">/ano</small></span>
           </div>
-          <p style="font-size:11px; color:#94a3b8; margin-top:4px;">Equivale a ~R$ 41,40/mês (Poupe 30%)</p>
+          <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Equivale a ~R$ 41,40/mês (Poupe 30%)</p>
           <button type="button" onclick="abrirCheckout('anual')" class="btn-action btn-emerald" style="margin-top:10px;">Garantir Acesso Anual</button>
         </div>
 
         <div style="background: rgba(168, 85, 247, 0.05); border: 1px solid rgba(168, 85, 247, 0.4); border-radius: 12px; padding: 14px;">
           <div style="display:flex; justify-content:space-between; align-items:center;">
             <strong style="color:#c084fc;">Imobiliárias (Equipes)</strong>
-            <span style="font-size:16px; font-weight:800; color:#c084fc;">R$ 997,00<small style="font-size:10px; color:#94a3b8;">/mês</small></span>
+            <span style="font-size:16px; font-weight:800; color:#c084fc;">R$ 997,00<small style="font-size:10px; color:var(--text-muted);">/mês</small></span>
           </div>
-          <p style="font-size:11px; color:#94a3b8; margin-top:4px;">Até 50 corretores + Painel de Gestor</p>
+          <p style="font-size:11px; color:var(--text-muted); margin-top:4px;">Até 50 corretores + Painel de Gestor</p>
           <button type="button" onclick="abrirCheckout('equipe')" class="btn-action" style="background:#9333ea; color:#fff; margin-top:10px;">Contratar para a Equipe</button>
         </div>
       </div>
     </section>
   </main>
+
+  <!-- MODAL DE CONFIGURAÇÕES GERAIS -->
+  <div id="settings-modal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <strong>⚙️ Configurações & Ajustes</strong>
+        <button class="modal-close" onclick="fecharModalAjustes()">✕</button>
+      </div>
+      <div class="modal-body">
+        
+        <div class="settings-list-item">
+          <div>
+            <strong>Perfil & Segurança</strong>
+            <span>Nome, telefone, e-mail e senha</span>
+          </div>
+          <button type="button" onclick="abrirModalPerfil()" class="settings-btn-link">Editar</button>
+        </div>
+
+        <div class="settings-list-item">
+          <div>
+            <strong>Tema de Visualização</strong>
+            <span id="theme-status-text">Escuro (Ativo)</span>
+          </div>
+          <button type="button" onclick="alternarTema()" class="settings-btn-link" id="btn-toggle-theme">Alternar Tema</button>
+        </div>
+
+        <div class="settings-list-item">
+          <div>
+            <strong>Conexão Gemini IA</strong>
+            <span>Chave opcional para inteligência livre</span>
+          </div>
+          <button type="button" onclick="configurarChaveGemini()" class="settings-btn-link">Configurar</button>
+        </div>
+
+        <div style="margin-top: 20px;">
+          <button type="button" onclick="deslogarSistema()" class="btn-action btn-danger">Encerrar Sessão / Deslogar</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL DE PERFIL DO USUÁRIO -->
+  <div id="profile-modal">
+    <div class="modal-sheet">
+      <div class="modal-header">
+        <strong>👤 Meu Perfil de Corretor</strong>
+        <button class="modal-close" onclick="fecharModalPerfil()">✕</button>
+      </div>
+      <div class="modal-body">
+        <form onsubmit="salvarPerfilUsuario(event)">
+          <div class="form-group">
+            <label>Nome Completo</label>
+            <input type="text" id="prof-name" placeholder="Ex: Gabriel Macena" required>
+          </div>
+
+          <div class="form-group">
+            <label>E-mail Comercial</label>
+            <input type="email" id="prof-email" placeholder="Ex: contato@corretor.com" required>
+          </div>
+
+          <div class="form-group">
+            <label>WhatsApp / Telefone</label>
+            <input type="text" id="prof-phone" placeholder="Ex: (41) 98782-9577" oninput="aplicarMascaraTelefone(this)" required>
+          </div>
+
+          <div style="border-top: 1px dashed var(--border-color); margin: 16px 0; padding-top: 12px;">
+            <label style="color:#10b981; font-weight:700;">Redefinir Senha de Acesso</label>
+            
+            <div class="form-group" style="margin-top:8px;">
+              <label>Nova Senha</label>
+              <input type="password" id="prof-pass" placeholder="Mínimo 6 dígitos">
+            </div>
+
+            <div class="form-group">
+              <label>Confirmar Nova Senha</label>
+              <input type="password" id="prof-pass-confirm" placeholder="Repita a nova senha">
+            </div>
+          </div>
+
+          <button type="submit" class="btn-action btn-emerald">Salvar Alterações</button>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <!-- Botão Flutuante Exclusivo do Cliente -->
   <a id="btn-lead-whatsapp-float" href="#" target="_blank">💬 Falar com o Corretor no WhatsApp</a>
@@ -417,10 +551,11 @@
     <div class="ia-body" id="ia-chat-messages">
       <div class="ia-msg bot">
         Olá! Sou seu assistente no ImobFlow.
-        
+
         Posso ajudar com regras de crédito da Caixa (cotas, tetos e taxas)[cite: 6], como usar cada recurso do app ou técnicas para destravar negociações com clientes. O que você precisa no momento?
       </div>
     </div>
+    <span id="ia-typing" class="ia-typing-indicator">Copiloto digitando...</span>
     <div class="ia-quick-topics">
       <span class="ia-chip" onclick="executarTopicoIA('regras_gerais')">Regras Caixa</span>
       <span class="ia-chip" onclick="executarTopicoIA('cotas_usado')">Cotas Usado</span>
@@ -432,7 +567,7 @@
       <span class="ia-chip" onclick="executarTopicoIA('sac_price')">SAC vs PRICE</span>
     </div>
     <div class="ia-input-row">
-      <input type="text" id="ia-user-input" placeholder="Digite sua pergunta..." onkeypress="if(event.key==='Enter') enviarMensagemCopiloto()">
+      <input type="text" id="ia-user-input" placeholder="Digite sua dúvida..." onkeypress="if(event.key==='Enter') enviarMensagemCopiloto()">
       <button onclick="enviarMensagemCopiloto()">Enviar</button>
     </div>
   </div>
@@ -477,6 +612,7 @@
       }, 2400);
     }
 
+    /* MÁSCARAS */
     function aplicarMascaraMoeda(input) {
       var valor = input.value.replace(/\D/g, '');
       if (!valor) {
@@ -487,6 +623,20 @@
       var partes = numero.split('.');
       partes[0] = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
       input.value = partes.join(',');
+    }
+
+    function aplicarMascaraTelefone(input) {
+      var v = input.value.replace(/\D/g, '');
+      if (v.length > 11) v = v.substring(0, 11);
+      if (v.length > 10) {
+        input.value = '(' + v.substring(0, 2) + ') ' + v.substring(2, 7) + '-' + v.substring(7);
+      } else if (v.length > 6) {
+        input.value = '(' + v.substring(0, 2) + ') ' + v.substring(2, 6) + '-' + v.substring(6);
+      } else if (v.length > 2) {
+        input.value = '(' + v.substring(0, 2) + ') ' + v.substring(2);
+      } else {
+        input.value = v;
+      }
     }
 
     function converterMoedaParaNumero(valorTexto) {
@@ -546,6 +696,98 @@
       window.scrollTo(0, 0);
     }
 
+    /* CONFIGURAÇÕES E PERFIL */
+    function abrirModalAjustes() {
+      document.getElementById('settings-modal').style.display = 'flex';
+    }
+
+    function fecharModalAjustes() {
+      document.getElementById('settings-modal').style.display = 'none';
+    }
+
+    function abrirModalPerfil() {
+      fecharModalAjustes();
+      carregarDadosPerfil();
+      document.getElementById('profile-modal').style.display = 'flex';
+    }
+
+    function fecharModalPerfil() {
+      document.getElementById('profile-modal').style.display = 'none';
+    }
+
+    function alternarTema() {
+      var isLight = document.body.classList.toggle('light-theme');
+      localStorage.setItem('imobflow_theme', isLight ? 'light' : 'dark');
+      document.getElementById('theme-status-text').innerText = isLight ? 'Claro (Ativo)' : 'Escuro (Ativo)';
+      mostrarToast(isLight ? 'Tema Claro ativado!' : 'Tema Escuro ativado!');
+    }
+
+    function carregarDadosPerfil() {
+      var nome = localStorage.getItem('imobflow_user_name') || '';
+      var email = localStorage.getItem('imobflow_user_email') || '';
+      var tel = localStorage.getItem('imobflow_user_phone') || '';
+
+      document.getElementById('prof-name').value = nome;
+      document.getElementById('prof-email').value = email;
+      document.getElementById('prof-phone').value = tel;
+    }
+
+    function salvarPerfilUsuario(e) {
+      e.preventDefault();
+      var nome = document.getElementById('prof-name').value.trim();
+      var email = document.getElementById('prof-email').value.trim();
+      var tel = document.getElementById('prof-phone').value.trim();
+      var pass = document.getElementById('prof-pass').value;
+      var passConf = document.getElementById('prof-pass-confirm').value;
+
+      if (pass || passConf) {
+        if (pass.length < 6) {
+          alert('A nova senha deve ter pelo menos 6 caracteres.');
+          return;
+        }
+        if (pass !== passConf) {
+          alert('As senhas digitadas não coincidem.');
+          return;
+        }
+        localStorage.setItem('imobflow_user_pass', pass);
+        mostrarToast('Senha atualizada com sucesso!');
+      }
+
+      localStorage.setItem('imobflow_user_name', nome);
+      localStorage.setItem('imobflow_user_email', email);
+      localStorage.setItem('imobflow_user_phone', tel);
+
+      // Atualiza também os campos da Vitrine Express se estiverem vazios ou iguais
+      document.getElementById('prop-agent').value = nome;
+      document.getElementById('prop-phone').value = tel;
+      atualizarVitrineCard();
+
+      fecharModalPerfil();
+      mostrarToast('Dados de perfil salvos com sucesso!');
+    }
+
+    function deslogarSistema() {
+      if (confirm('Deseja realmente deslogar e limpar a sessão deste aparelho?')) {
+        localStorage.removeItem('imobflow_user_name');
+        localStorage.removeItem('imobflow_user_email');
+        localStorage.removeItem('imobflow_user_phone');
+        localStorage.removeItem('imobflow_user_pass');
+        fecharModalAjustes();
+        location.reload();
+      }
+    }
+
+    function configurarChaveGemini() {
+      var chaveAtual = localStorage.getItem('imobflow_gemini_key') || '';
+      var novaChave = prompt('Insira sua Chave de API Google Gemini (AI Studio):\n(Deixe vazio para usar o motor analítico integrado)', chaveAtual);
+      if (novaChave !== null) {
+        localStorage.setItem('imobflow_gemini_key', novaChave.trim());
+        fecharModalAjustes();
+        mostrarToast(novaChave.trim() ? 'Conexão Gemini IA ativada!' : 'Usando motor nativo integrado!');
+      }
+    }
+
+    /* SELETORES CALCULADORA */
     function selecionarTipoImovel(tipo) {
       tipoImovelAtual = tipo;
       ['planta', 'novo', 'usado'].forEach(function(t) {
@@ -707,7 +949,7 @@
       if (financAprovado < tetoFinanceiro) {
         statusEl.innerHTML = '<span style="color:#fbbf24;">⚠️ Pela renda em ' + descTipo + ' (' + amortizacaoAtual.toUpperCase() + '), aprova até ' + formatarReal(financAprovado) + '. Entrada requerida: ' + formatarReal(entradaNecessaria) + '.' + avisoLimite + '</span>';
       } else {
-        statusEl.innerHTML = '<span style="color:#34d399;">✔ Renda aprova a cota máxima de ' + cotaPct + '% para imóvel ' + descTipo + ' (' + formatarReal(financAprovado) + '). Taxa: ' + jurosAnual + '% a.a.' + avisoLimite + '</span>';
+        statusEl.innerHTML = '<span style="color:#10b981;">✔ Renda aprova a cota máxima de ' + cotaPct + '% para imóvel ' + descTipo + ' (' + formatarReal(financAprovado) + '). Taxa: ' + jurosAnual + '% a.a.' + avisoLimite + '</span>';
       }
 
       document.getElementById('res-financiamento').innerText = formatarReal(financAprovado);
@@ -1079,192 +1321,219 @@
       mostrarToast('A redirecionar para o checkout do plano ' + plano + '...');
     }
 
-    /* =====================================================
-       COPILOTO IA: MOTOR DE RESPOSTAS PROFISSIONAL E HUMANIZADO
-       ===================================================== */
-    function alternarCopilotoIA() {
-      var modal = document.getElementById('ia-copilot-modal');
-      modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
-      if (modal.style.display === 'flex') {
-        var chat = document.getElementById('ia-chat-messages');
-        chat.scrollTop = chat.scrollHeight;
-      }
-    }
+    /* COPILOTO IA */
+    var baseConhecimentoCaixa = {
+      regras_gerais: '📌 *Resumo Estratégico das Linhas Caixa (2026):*\n\n' +
+                     '• *Minha Casa Minha Vida (MCMV):* Rendas até R$ 9.600. Tetos de avaliação de R$ 275 mil (Faixas 1 e 2) e R$ 400 mil (Faixa 3). Taxas de 4,25% a 7,66% ao ano.\n' +
+                     '• *Classe Média (Faixa 4):* Renda entre R$ 9.600,01 e R$ 13.000. Teto de imóvel de até R$ 600 mil com juros fixados em 10% a.a.\n' +
+                     '• *Pró-Cotista FGTS:* Sem teto de renda, exigindo pelo menos 3 anos de carteira assinada. Imóveis até R$ 500 mil com taxa de 8,66% a.a.\n' +
+                     '• *SBPE Tradicional:* Sem limite de renda, atendendo imóveis de até R$ 2,25 milhões. Taxa de 10,92% a.a.',
 
-    function adicionarMensagemChat(autor, texto) {
-      var chat = document.getElementById('ia-chat-messages');
-      var msgDiv = document.createElement('div');
-      msgDiv.className = 'ia-msg ' + autor;
-      msgDiv.innerText = texto;
-      chat.appendChild(msgDiv);
-      chat.scrollTop = chat.scrollHeight;
-    }
+      cotas_usado: '📌 *Cotas Máximas para Imóveis USADOS (Caixa 2026):*\n\n' +
+                   '• *MCMV (Faixas 1, 2 e 3):* Financia até *80%* do valor de avaliação.\n' +
+                   '• *Classe Média (Faixa 4):* Financia até *60%* no Sul e Sudeste, e até *80%* no Norte, Nordeste e Centro-Oeste.\n' +
+                   '• *Pró-Cotista FGTS:* Cota reduzida para até *60%*.\n' +
+                   '• *SBPE:* Libera até *80%* no SAC e até *70%* na PRICE.',
 
-    var respostasProntas = {
-      regras_gerais: '📌 Resumo das Linhas da Caixa (2026):\n\n' +
-                     '• MCMV: Renda familiar até R$ 9.600. Imóveis até R$ 275 mil (Fx 1 e 2) ou R$ 400 mil (Fx 3). Taxas de 4,25% a 7,66% a.a.\n' +
-                     '• Classe Média (Fx 4): Renda de R$ 9.600 a R$ 13.000. Imóvel até R$ 600 mil. Taxa de 10% a.a.\n' +
-                     '• Pró-Cotista: Sem limite de renda. Imóvel até R$ 500 mil. Taxa de 8,66% a.a.\n' +
-                     '• SBPE: Sem limite de renda. Imóveis até R$ 2,25 milhões. Taxa de 10,92% a.a.',
+      cotas_novo: '📌 *Cotas para Imóveis NOVOS ou NA PLANTA:*\n\n' +
+                  '• *MCMV Faixas 1 e 2:* Libera até *90%* pela tabela SAC e até *80%* na PRICE.\n' +
+                  '• *MCMV Faixa 3:* Financia até *80%*.\n' +
+                  '• *Classe Média (Faixa 4):* Financia até *80%*.\n' +
+                  '• *Pró-Cotista FGTS:* Cota limitada em *60%*.\n' +
+                  '• *SBPE:* Financia até *80%* no SAC e até *70%* na PRICE.',
 
-      cotas_usado: '📌 Cotas Oficiais para Imóveis USADOS:\n\n' +
-                   '• MCMV (Faixas 1, 2 e 3): financia até 80%\n' +
-                   '• Classe Média (Faixa 4): financia até 60% (Sul/Sudeste) ou 80% (N/NE/CO)\n' +
-                   '• Pró-Cotista: financia até 60%\n' +
-                   '• SBPE: financia até 80% na SAC ou 70% na PRICE.',
+      tetos_renda: '📌 *Faixas de Renda e Tetos de Imóvel da Caixa:*\n\n' +
+                   '• *Faixa 1:* Renda bruta até R$ 2.850. Imóvel até R$ 275 mil.\n' +
+                   '• *Faixa 2:* Renda de R$ 2.850 a R$ 5.000. Imóvel até R$ 275 mil.\n' +
+                   '• *Faixa 3:* Renda de R$ 5.000 a R$ 9.600. Imóvel até R$ 400 mil.\n' +
+                   '• *Faixa 4 (Classe Média):* Renda de R$ 9.600 a R$ 13.000. Imóvel até R$ 600 mil.\n' +
+                   '• *Pró-Cotista:* Sem limite de renda. Imóvel até R$ 500 mil.\n' +
+                   '• *SBPE:* Sem limite de renda. Imóvel até R$ 2,25 milhões.',
 
-      cotas_novo: '📌 Cotas para Imóveis NOVOS ou NA PLANTA:\n\n' +
-                  '• MCMV Faixas 1 e 2: até 90% (na tabela SAC) ou 80% (na PRICE)\n' +
-                  '• MCMV Faixa 3: financia até 80%\n' +
-                  '• Classe Média (Faixa 4): financia até 80%\n' +
-                  '• Pró-Cotista: financia até 60%\n' +
-                  '• SBPE: financia até 80% na SAC ou 70% na PRICE.',
+      regra_idade: '📌 *Regra de Idade e Prazo Limite da Caixa:*\n\n' +
+                   'O prazo bancário máximo é de 420 meses (35 anos).\n\n' +
+                   'Pela *Regra dos 80,5 Anos*, a idade do comprador mais velho somada ao prazo não pode passar de 80 anos e 6 meses no vencimento final.\n\n' +
+                   '• Cliente com 30 anos pode financiar os 35 anos completos.\n' +
+                   '• Cliente com 55 anos só pode contratar no máximo 25,5 anos (306 meses), o que encurta o prazo e eleva a parcela.',
 
-      tetos_renda: '📌 Tetos de Renda e de Imóvel da Caixa:\n\n' +
-                   '• MCMV Faixa 1: Renda até R$ 2.850 | Imóvel até R$ 275 mil\n' +
-                   '• MCMV Faixa 2: Renda R$ 2.850 a R$ 5.000 | Imóvel até R$ 275 mil\n' +
-                   '• MCMV Faixa 3: Renda R$ 5.000 a R$ 9.600 | Imóvel até R$ 400 mil\n' +
-                   '• Classe Média (Faixa 4): Renda R$ 9.600 a R$ 13.000 | Imóvel até R$ 600 mil\n' +
-                   '• Pró-Cotista: Sem teto de renda | Imóvel até R$ 500 mil\n' +
-                   '• SBPE: Sem teto de renda | Imóvel até R$ 2,25 milhões.',
+      sac_price: '📊 *Comparativo Tático: SAC vs. PRICE:*\n\n' +
+                 '• *Tabela SAC:* Parcelas decrescentes (a 1ª é a mais alta). Amortiza a dívida mais rápido e gera menos juros totais. A 1ª parcela não pode passar de 30% da renda.\n' +
+                 '• *Tabela PRICE:* Parcelas fixas do início ao fim. Como a prestação inicial é menor, permite financiar um valor maior com a mesma renda.',
 
-      regra_idade: '📌 Regra de Idade e Prazo Caixa:\n\n' +
-                   '• O prazo máximo padrão é de 420 meses (35 anos).\n' +
-                   '• Regra de Ouro: A idade do comprador mais velho + o prazo em anos não pode ultrapassar 80 anos e 6 meses (80,5 anos).\n' +
-                   '• Exemplo prático: Um cliente com 55 anos só pode financiar até 25,5 anos (306 meses), o que aumenta a parcela mensal.',
+      link_vitrine: '📲 *Como Usar a Vitrine Interativa com o Cliente:*\n\n' +
+                    '1. Acesse a aba **Vitrine**, insira as fotos e os dados do imóvel.\n' +
+                    '2. Clique em **"🔗 Copiar Link Interativo para o Cliente"**.\n' +
+                    '3. Envie pelo WhatsApp. O comprador visualiza um carrossel limpo sem botões de corretor, com botão direto para o seu WhatsApp!',
 
-      sac_price: '📊 Diferença entre SAC e PRICE:\n\n' +
-                 '• SAC (Decrescente): A primeira parcela é a mais alta e vai baixando todo mês. A Caixa limita a primeira parcela a 30% da renda.\n' +
-                 '• PRICE (Fixa): A parcela é exatamente a mesma do início ao fim. Como a 1ª parcela começa menor que na SAC, permite aprovar mais valor para rendas mais apertadas.',
+      exportar_pdf: '📄 *Como Gerar a Apresentação em PDF Profissional:*\n\n' +
+                    'Clique no botão **"📄 Baixar Apresentação em PDF (Multi-Fotos)"**. O app gera um arquivo A4 executivo: a folha 1 exibe a foto principal e ficha técnica, e as seguintes trazem as outras fotos com seu rodapé comercial.',
 
-      link_vitrine: '📲 Como usar o Link Interativo da Vitrine:\n\n' +
-                    '1. Vá na aba Vitrine, preencha os dados e escolha as fotos do imóvel.\n' +
-                    '2. Clique em "🔗 Copiar Link Interativo para o Cliente".\n' +
-                    '3. Ao abrir esse link, o cliente vê uma tela de fotos com passe de dedo, sem nenhum botão de corretor, e com um botão direto para o seu WhatsApp!',
-
-      exportar_pdf: '📄 Como exportar a Apresentação em PDF:\n\n' +
-                    'Clique no botão roxo "📄 Baixar Apresentação em PDF". O app monta um PDF de alta qualidade: a página 1 traz a foto principal e ficha técnica, e as páginas seguintes distribuem as demais fotos com seus contatos no rodapé.',
-
-      exportar_png: '📥 Como baixar o Card em Imagem (PNG):\n\n' +
-                    'O botão azul "📥 Baixar Card em Imagem (PNG)" renderiza uma foto em alta definição do card atual e salva direto na sua galeria ou downloads, pronta para postar no Instagram, Stories ou Status do WhatsApp.',
-
-      cliente_sumiu: '🛡️ Como destravar cliente travado ou sumido:\n\n' +
-                     '1. Se o cliente sumiu após a simulação: Use o "Descarte Suave" (Aba Antissumiço, opção 3). Pergunte se pode arquivar a pasta dele. O medo de perder a reserva faz a maioria responder imediatamente.\n' +
-                     '2. Se travou no envio de documentos: Use a opção 4 da aba Antissumiço, criando senso de urgência bancária pelo lote semanal da Caixa.\n' +
-                     '3. Se travou por medo da parcela: Avalie a composição de renda com um coobrigado ou compare o valor da parcela com o aluguel futuro.'
+      cliente_sumiu: '🛡️ *Táticas para Destravar Clientes Travados ou Sumidos:*\n\n' +
+                     '1. **Cliente Sumiu após a Simulação:** Use o gatilho da perda reversa (Script 3 da aba Antissumiço): pergunte se pode arquivar a pasta dele para não incomodar. A sensação de descarte faz a maioria responder imediatamente.\n\n' +
+                     '2. **Travou no Envio de Documentos:** Aplique urgência de correspondente bancário (Script 4): explique que as taxas vigentes dependem da entrada no lote semanal da Caixa.\n\n' +
+                     '3. **Travou com Medo da Parcela:** Apresente a composição de renda (Script 7) ou compare a parcela fixa com a perda irreversível do aluguel acumulado (Script 8).'
     };
 
     function executarTopicoIA(chave) {
       var rotulos = {
-        regras_gerais: 'Regras da Caixa',
-        cotas_usado: 'Cotas Usado',
-        tetos_renda: 'Tetos de Renda',
-        regra_idade: 'Regra de Idade',
-        cliente_sumiu: 'Como destravar cliente travado?',
-        link_vitrine: 'Como funciona o Link da Vitrine?',
+        regras_gerais: 'Quais são as regras gerais e faixas da Caixa?',
+        cotas_usado: 'Como funcionam as cotas de imóveis usados?',
+        tetos_renda: 'Quais os tetos de renda e valor de imóvel?',
+        regra_idade: 'Como funciona a regra de idade e prazo máximo?',
+        cliente_sumiu: 'Como destravar cliente travado ou sumido?',
+        link_vitrine: 'Como funciona o Link Interativo da Vitrine?',
         exportar_pdf: 'Como funciona a Apresentação em PDF?',
-        sac_price: 'SAC vs PRICE'
+        sac_price: 'Qual a diferença prática entre tabela SAC e PRICE?'
       };
-      var perguntaTexto = rotulos[chave] || 'Dúvida';
-      adicionarMensagemChat('user', perguntaTexto);
+      adicionarMensagemChat('user', rotulos[chave] || 'Consulta');
+
+      var typing = document.getElementById('ia-typing');
+      typing.style.display = 'block';
 
       setTimeout(function() {
-        if (respostasProntas[chave]) {
-          adicionarMensagemChat('bot', respostasProntas[chave]);
+        typing.style.display = 'none';
+        if (baseConhecimentoCaixa[chave]) {
+          adicionarMensagemChat('bot', baseConhecimentoCaixa[chave]);
         }
-      }, 200);
+      }, 350);
     }
 
-    function processarRespostaIA(pergunta) {
+    function gerarRespostaLocal(pergunta) {
       var p = pergunta.toLowerCase().trim();
-      var r = '';
 
-      // 1. SAUDAÇÕES HUMANIZADAS E EDUCADAS
-      if (['oi', 'ola', 'olá', 'eai', 'e aí', 'opa', 'fala', 'salve', 'bom dia', 'boa tarde', 'boa noite'].indexOf(p) !== -1 || p.indexOf('tudo bem') !== -1 || p.indexOf('como vai') !== -1 || p.indexOf('tudo bom') !== -1) {
+      if (['oi', 'ola', 'olá', 'eai', 'e aí', 'opa', 'salve', 'bom dia', 'boa tarde', 'boa noite', 'como vai', 'tudo bem', 'tudo bom'].some(function(term) { return p === term || p.indexOf(term) === 0; })) {
         var saudacoes = [
-          'Olá! Tudo bem por aqui, e com você? Como estão os atendimentos hoje? Em que posso ajudar na sua rotina de vendas?',
-          'Olá! Tudo ótimo. Como posso colaborar com suas simulações ou fechamentos de imóveis hoje?',
-          'Olá! Seja bem-vindo(a). Em que posso auxiliar você com as regras da Caixa ou com os recursos do ImobFlow?'
+          'Olá! Tudo excelente por aqui. Como posso ajudar com suas simulações, regras de crédito ou estratégias com clientes hoje?',
+          'Olá! Seja muito bem-vindo(a). Estou à disposição para tirar qualquer dúvida sobre a Caixa, analisar perfis de financiamento ou apoiar seus fechamentos.',
+          'Olá! Tudo bem? Vamos em frente. O que você precisa consultar sobre financiamento imobiliário ou ferramentas do app agora?'
         ];
-        r = saudacoes[Math.floor(Math.random() * saudacoes.length)];
+        return saudacoes[Math.floor(Math.random() * saudacoes.length)];
       }
-      else if (p.indexOf('obrigado') !== -1 || p.indexOf('obrigada') !== -1 || p.indexOf('valeu') !== -1 || p.indexOf('perfeito') !== -1 || p.indexOf('show') !== -1) {
-        r = 'Disponha sempre! Se precisar simular novas condições, consultar prazos ou exportar materiais, conte comigo.';
+
+      if (['obrigado', 'obrigada', 'valeu', 'show', 'perfeito', 'excelente', 'maravilha', 'agradeço'].some(function(term) { return p.indexOf(term) !== -1; })) {
+        return 'Disponha sempre! Estou por aqui para dar todo o suporte técnico e comercial que seus atendimentos precisarem. Conte comigo!';
       }
-      else if (p.indexOf('quem e voce') !== -1 || p.indexOf('quem é você') !== -1 || p.indexOf('seu nome') !== -1) {
-        r = 'Sou o Copiloto ImobFlow, sua inteligência de apoio para crédito imobiliário Caixa, cálculo de capacidade financeira e fechamento de vendas.';
+
+      if (p.indexOf('quem e voce') !== -1 || p.indexOf('quem é você') !== -1 || p.indexOf('seu nome') !== -1) {
+        return 'Sou o Copiloto ImobFlow, sua inteligência executiva de apoio para crédito imobiliário Caixa, análise de viabilidade financeira e conversão de clientes.';
       }
-      // 2. CLIENTE TRAVADO / SUMIDO / OBJEÇÕES (PRIORIDADE ALTA)
-      else if (p.indexOf('travado') !== -1 || p.indexOf('destravar') !== -1 || p.indexOf('desenrolar') !== -1 || p.indexOf('sumiu') !== -1 || p.indexOf('vácuo') !== -1 || p.indexOf('descarte') !== -1 || p.indexOf('bolo') !== -1 || p.indexOf('obje') !== -1) {
-        r = respostasProntas.cliente_sumiu;
+
+      if (['travado', 'destravar', 'desenrolar', 'sumiu', 'sumiço', 'vácuo', 'descarte', 'bolo', 'parou de responder', 'cliente sumiu', 'como recuperar'].some(function(term) { return p.indexOf(term) !== -1; })) {
+        return baseConhecimentoCaixa.cliente_sumiu;
       }
-      // 3. COTAS (USADO, NOVO, PLANTA OU GERAL)
-      else if (p.indexOf('usado') !== -1 && (p.indexOf('cota') !== -1 || p.indexOf('%') !== -1 || p.indexOf('quanto') !== -1 || p.indexOf('financia') !== -1)) {
-        r = respostasProntas.cotas_usado;
+
+      if (p.indexOf('usado') !== -1 && (p.indexOf('cota') !== -1 || p.indexOf('%') !== -1 || p.indexOf('quanto') !== -1 || p.indexOf('financia') !== -1)) {
+        return baseConhecimentoCaixa.cotas_usado;
       }
-      else if ((p.indexOf('novo') !== -1 || p.indexOf('planta') !== -1) && (p.indexOf('cota') !== -1 || p.indexOf('%') !== -1 || p.indexOf('quanto') !== -1 || p.indexOf('financia') !== -1)) {
-        r = respostasProntas.cotas_novo;
+      if ((p.indexOf('novo') !== -1 || p.indexOf('planta') !== -1) && (p.indexOf('cota') !== -1 || p.indexOf('%') !== -1 || p.indexOf('quanto') !== -1 || p.indexOf('financia') !== -1)) {
+        return baseConhecimentoCaixa.cotas_novo;
       }
-      else if (p.indexOf('cota') !== -1 || p.indexOf('cotas') !== -1 || p.indexOf('quanto financia') !== -1 || p.indexOf('porcentagem') !== -1 || p.indexOf('percentual') !== -1) {
-        r = '📌 Resumo Geral de Cotas de Financiamento Caixa (2026):\n\n' +
-            '🏢 Imóveis Novos ou na Planta:\n' +
-            '• MCMV Faixas 1 e 2: até 90% no SAC (80% na PRICE)\n' +
-            '• MCMV Faixa 3 e Classe Média (Fx 4): até 80%\n' +
-            '• Pró-Cotista: até 60%\n' +
-            '• SBPE: até 80% no SAC ou 70% na PRICE\n\n' +
-            '🏡 Imóveis Usados:\n' +
-            '• MCMV: até 80%\n' +
-            '• Classe Média (Fx 4): até 60% (S/SE) ou 80% (demais regiões)\n' +
-            '• Pró-Cotista: até 60%\n' +
-            '• SBPE: até 80% no SAC ou 70% na PRICE.';
+      if (['cota', 'cotas', 'quanto financia', 'porcentagem', 'percentual'].some(function(term) { return p.indexOf(term) !== -1; })) {
+        return '📌 *Panorama Geral de Cotas de Financiamento Caixa (2026):*\n\n' +
+               '🏢 *Imóveis Novos ou na Planta:*\n' +
+               '• MCMV Faixas 1 e 2: até *90%* pela tabela SAC (*80%* pela PRICE)\n' +
+               '• MCMV Faixa 3 e Classe Média (Fx 4): até *80%*\n' +
+               '• Pró-Cotista FGTS: até *60%*\n' +
+               '• SBPE Tradicional: até *80%* no SAC e *70%* na PRICE\n\n' +
+               '🏡 *Imóveis Usados:*\n' +
+               '• MCMV: até *80%*\n' +
+               '• Classe Média (Fx 4): até *60%* (Sul e Sudeste) e *80%* (demais regiões)\n' +
+               '• Pró-Cotista FGTS: até *60%*\n' +
+               '• SBPE Tradicional: até *80%* no SAC e *70%* na PRICE.';
       }
-      // 4. TETOS E FAIXAS DE RENDA
-      else if (p.indexOf('teto') !== -1 || p.indexOf('limite') !== -1 || p.indexOf('faixa') !== -1 || p.indexOf('renda') !== -1) {
-        r = respostasProntas.tetos_renda;
+
+      if (['teto', 'tetos', 'limite', 'faixa', 'faixas', 'renda', 'salario'].some(function(term) { return p.indexOf(term) !== -1; })) {
+        return baseConhecimentoCaixa.tetos_renda;
       }
-      // 5. TAXAS DE JUROS
-      else if (p.indexOf('taxa') !== -1 || p.indexOf('juros') !== -1) {
-        r = '📌 Taxas de Juros Vigentes para Cotistas (S/SE/CO):\n\n' +
-            '• MCMV Faixa 1 (até R$ 2.850): 4,25% a 4,50% a.a.\n' +
-            '• MCMV Faixa 2 (R$ 2.850 a R$ 5k): 4,75% a 6,50% a.a.\n' +
-            '• MCMV Faixa 3 (R$ 5k a R$ 9,6k): 7,66% a.a.\n' +
-            '• Faixa 4 (R$ 9,6k a R$ 13k): 10,00% a.a.\n' +
-            '• Pró-Cotista (até R$ 500k): 8,66% a.a.\n' +
-            '• SBPE (até R$ 2,25M): 10,92% a.a.';
+
+      if (['taxa', 'taxas', 'juro', 'juros'].some(function(term) { return p.indexOf(term) !== -1; })) {
+        return '📌 *Taxas de Juros Vigentes para Cotistas Caixa (Região S/SE/CO):*\n\n' +
+               '• *MCMV Faixa 1 (até R$ 2.850):* de 4,25% a 4,50% ao ano.\n' +
+               '• *MCMV Faixa 2 (R$ 2.850 a R$ 5.000):* de 4,75% a 6,50% ao ano.\n' +
+               '• *MCMV Faixa 3 (R$ 5.000 a R$ 9.600):* 7,66% ao ano.\n' +
+               '• *Faixa 4 (Classe Média):* 10,00% ao ano.\n' +
+               '• *Pró-Cotista FGTS:* 8,66% ao ano.\n' +
+               '• *SBPE Tradicional:* 10,92% ao ano.';
       }
-      // 6. IDADE E PRAZO
-      else if (p.indexOf('idade') !== -1 || p.indexOf('prazo') !== -1 || p.indexOf('80') !== -1 || p.indexOf('meses') !== -1) {
-        r = respostasProntas.regra_idade;
+
+      if (['idade', 'prazo', '80', 'anos', 'meses', 'tempo'].some(function(term) { return p.indexOf(term) !== -1; })) {
+        return baseConhecimentoCaixa.regra_idade;
       }
-      // 7. SAC vs PRICE
-      else if (p.indexOf('sac') !== -1 || p.indexOf('price') !== -1 || p.indexOf('amortiz') !== -1) {
-        r = respostasProntas.sac_price;
+
+      if (['sac', 'price', 'amortiz', 'tabela'].some(function(term) { return p.indexOf(term) !== -1; })) {
+        return baseConhecimentoCaixa.sac_price;
       }
-      // 8. FUNCIONALIDADES DO APP (LINK, PDF, PNG, VITRINE)
-      else if (p.indexOf('link') !== -1 || p.indexOf('compartilhar') !== -1 || p.indexOf('vitrine') !== -1) {
-        r = respostasProntas.link_vitrine;
+
+      if (p.indexOf('link') !== -1 || p.indexOf('compartilhar') !== -1) {
+        return baseConhecimentoCaixa.link_vitrine;
       }
-      else if (p.indexOf('pdf') !== -1 || p.indexOf('apresenta') !== -1) {
-        r = respostasProntas.exportar_pdf;
+      if (p.indexOf('pdf') !== -1) {
+        return baseConhecimentoCaixa.exportar_pdf;
       }
-      else if (p.indexOf('png') !== -1 || p.indexOf('foto') !== -1 || p.indexOf('imagem') !== -1 || p.indexOf('card') !== -1) {
-        r = respostasProntas.exportar_png;
+      if (p.indexOf('png') !== -1 || p.indexOf('foto') !== -1 || p.indexOf('imagem') !== -1 || p.indexOf('card') !== -1) {
+        return '📥 *Exportação de Imagem (PNG):*\n\nBasta tocar em **"📥 Baixar Card em Imagem (PNG)"** na aba Vitrine. O aplicativo gera um arquivo de alta definição pronto para postar nos Stories, WhatsApp Status ou enviar em grupos com layout profissional!';
       }
-      else if (p.indexOf('documento') !== -1 || p.indexOf('docs') !== -1 || p.indexOf('papel') !== -1) {
-        r = '📑 Dica de Envio de Documentos:\n\nGere a mensagem do script 4 na aba "Antissumiço". Ela cria senso de urgência bancária explicando que a taxa simulada e a vaga na mesa de crédito dependem do fechamento do lote semanal!';
+      if (p.indexOf('documento') !== -1 || p.indexOf('docs') !== -1) {
+        return '📑 *Checklist Básico para Aprovação de Crédito Caixa:*\n\n' +
+               '• Documento oficial com foto (RG/CNH)\n' +
+               '• Comprovante de estado civil atualizado\n' +
+               '• Comprovante de residência atual (últimos 60 dias)\n' +
+               '• Comprovante de renda (3 últimos holerites ou extrato bancário de 6 meses para autônomos)\n' +
+               '• Carteira de Trabalho física ou digital + Extrato analítico do FGTS.';
       }
-      // 9. RESPOSTA DE SUPORTE CONTEXTUALIZADA
-      else {
-        r = 'Compreendido! Posso ajudar com:\n\n' +
-            '• Regras e cotas de financiamento da Caixa (Planta, Novo ou Usado)\n' +
-            '• Tetos de renda e juros do MCMV ou SBPE\n' +
-            '• Técnicas da aba Antissumiço para destravar clientes\n' +
-            '• Como exportar os links e apresentações da Vitrine Express.';
+
+      return 'Perfeito! Posso detalhar qualquer ponto da sua rotina imobiliária. Você deseja:\n\n' +
+             '1. Consultar cotas e limites exatos de financiamento (Planta, Novo ou Usado)?\n' +
+             '2. Entender os tetos de renda e juros do MCMV, Faixa 4 ou SBPE?\n' +
+             '3. Aplicar os scripts da central Antissumiço para reativar um cliente travado?\n' +
+             '4. Ver como gerar o Link Interativo ou o PDF da Vitrine?\n\n' +
+             'Basta me dizer qual é o cenário do seu atendimento agora!';
+    }
+
+    async function processarRespostaIA(pergunta) {
+      var typing = document.getElementById('ia-typing');
+      typing.style.display = 'block';
+
+      var apiKey = localStorage.getItem('imobflow_gemini_key') || '';
+
+      if (apiKey) {
+        try {
+          var systemPrompt = 'Você é o Copiloto ImobFlow, um consultor imobiliário de elite e correspondente bancário sênior da Caixa Econômica Federal. ' +
+                             'Seu tom é seguro, profissional, acolhedor e altamente técnico, sem usar gírias masculinizadas como irmão ou parceiro, tratando o interlocutor de forma neutra. ' +
+                             'Você domina: regras Caixa 2026 (MCMV faixas 1 a 3 com tetos de 275k e 400k; Faixa 4 até 600k com 10% a.a.; Pró-cotista até 500k com 8.66% a.a.; SBPE até 2.25M com 10.92% a.a.), ' +
+                             'cotas de novos/planta (até 90% SAC no MCMV 1 e 2; 80% nos demais) e usados (80% MCMV; 60% S/SE na faixa 4 e pró-cotista; 80% SAC e 70% Price no SBPE), ' +
+                             'regra de idade (idade + prazo <= 80,5 anos), SAC vs PRICE, e as funções do app ImobFlow (Vitrine com link público ?v= e PDF multi-páginas, Qualificador e Scripts Antissumiço). ' +
+                             'Seja comunicativo, falador, consultivo e focado em apoiar o corretor a fechar negócio.';
+
+          var url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey;
+          var bodyPayload = {
+            contents: [
+              { role: 'user', parts: [{ text: systemPrompt + '\n\nPergunta do corretor: ' + pergunta }] }
+            ]
+          };
+
+          var response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(bodyPayload)
+          });
+
+          var data = await response.json();
+          typing.style.display = 'none';
+
+          if (data && data.candidates && data.candidates[0] && data.candidates[0].content) {
+            var respostaTexto = data.candidates[0].content.parts[0].text;
+            adicionarMensagemChat('bot', respostaTexto);
+            return;
+          }
+        } catch(err) {}
       }
 
       setTimeout(function() {
-        adicionarMensagemChat('bot', r);
-      }, 250);
+        typing.style.display = 'none';
+        var respostaLocal = gerarRespostaLocal(pergunta);
+        adicionarMensagemChat('bot', respostaLocal);
+      }, 350);
     }
 
     function enviarMensagemCopiloto() {
@@ -1278,6 +1547,20 @@
 
     /* INICIALIZAÇÃO */
     window.onload = function() {
+      // Carrega tema salvo
+      var savedTheme = localStorage.getItem('imobflow_theme');
+      if (savedTheme === 'light') {
+        document.body.classList.add('light-theme');
+        var themeText = document.getElementById('theme-status-text');
+        if (themeText) themeText.innerText = 'Claro (Ativo)';
+      }
+
+      // Preenche dados do corretor se existirem no perfil
+      var savedName = localStorage.getItem('imobflow_user_name');
+      var savedPhone = localStorage.getItem('imobflow_user_phone');
+      if (savedName) document.getElementById('prop-agent').value = savedName;
+      if (savedPhone) document.getElementById('prop-phone').value = savedPhone;
+
       atualizarVitrineCard();
 
       var urlParams = new URLSearchParams(window.location.search);
