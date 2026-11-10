@@ -30,11 +30,11 @@
     .form-group { margin-bottom: 12px; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     label { display: block; font-size: 11px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px; }
-    input, select { width: 100%; background: #020617; border: 1px solid #334155; border-radius: 10px; padding: 10px 12px; color: #fff; font-size: 16px; outline: none; }
+    input, select { width: 100%; background: #020617; border: 1px solid #334155; border-radius: 10px; padding: 10px 12px; color: #fff; font-size: 14px; outline: none; }
     input:focus, select:focus { border-color: #10b981; }
     input[type="file"] { font-size: 12px; padding: 8px; }
 
-    /* Botões de Ação */
+    /* Botões */
     .btn-primary { width: 100%; background: #10b981; color: #020617; border: none; font-weight: 700; padding: 12px; border-radius: 10px; font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 6px; }
     .btn-primary:active { transform: scale(0.98); }
     .btn-whatsapp { width: 100%; background: #1e293b; border: 1px solid rgba(16, 185, 129, 0.3); color: #34d399; font-weight: 600; padding: 10px; border-radius: 10px; font-size: 12px; cursor: pointer; margin-top: 10px; }
@@ -42,9 +42,8 @@
 
     /* Resultados */
     .result-box { background: linear-gradient(135deg, #0f172a, #09101f); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
-    .result-title { font-size: 11px; font-weight: 800; color: #34d399; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; }
+    .result-title { font-size: 11px; font-weight: 800; color: #34d399; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
     .result-status { font-size: 12px; color: #cbd5e1; margin-bottom: 12px; line-height: 1.4; }
-    .result-status.warn { color: #fbbf24; }
     .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .result-item { background: rgba(2, 6, 23, 0.8); border: 1px solid #1e293b; border-radius: 10px; padding: 10px; }
     .result-item span { font-size: 10px; color: #94a3b8; display: block; margin-bottom: 4px; }
@@ -57,7 +56,7 @@
 
     /* Vitrine Preview */
     .vitrine-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; overflow: hidden; margin-top: 12px; }
-    .vitrine-img { height: 160px; background: #020617 center / cover no-repeat; display: flex; align-items: center; justify-content: center; color: #475569; position: relative; font-size: 12px; }
+    .vitrine-img { height: 170px; background: #020617 center / cover no-repeat; display: flex; align-items: center; justify-content: center; color: #475569; position: relative; font-size: 12px; }
     .vitrine-badge { position: absolute; top: 10px; left: 10px; background: #10b981; color: #020617; font-size: 9px; font-weight: 800; padding: 3px 6px; border-radius: 4px; }
     .vitrine-body { padding: 14px; }
     .vitrine-title-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
@@ -67,14 +66,14 @@
     .tags-container { display: flex; flex-wrap: wrap; gap: 4px; }
     .tag-item { background: #1e293b; color: #cbd5e1; font-size: 10px; padding: 3px 8px; border-radius: 4px; }
 
-    /* Barra de Navegação Inferior */
+    /* Navegação Inferior */
     nav { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(10px); border-top: 1px solid #1e293b; z-index: 40; padding-bottom: env(safe-area-inset-bottom, 0px); }
     .nav-container { max-width: 480px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; padding: 8px 12px; }
     .nav-btn { background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; color: #64748b; font-size: 10px; font-weight: 600; cursor: pointer; padding: 4px 0; }
     .nav-btn.active { color: #10b981; }
     .nav-icon { font-size: 16px; margin-bottom: 2px; }
 
-    /* Aviso (toast) */
+    /* Aviso Toast */
     .toast { position: fixed; left: 50%; bottom: 100px; transform: translateX(-50%) translateY(20px); background: #1e293b; border: 1px solid #334155; color: #f8fafc; padding: 10px 16px; border-radius: 10px; font-size: 12px; font-weight: 600; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 100; max-width: 90%; text-align: center; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -98,65 +97,65 @@
   </header>
 
   <main>
-    <!-- ABA 1: CALCULADORA MCMV -->
+    <!-- ABA 1: CALCULADORA MCMV & PRAZO -->
     <section id="tab-calculator">
       <div class="card">
         <div class="card-header">
-          <h2 class="card-title">⚡ Qualificador Rápido MCMV</h2>
-          <span class="pill">Pré-Análise</span>
+          <h2 class="card-title">⚡ Qualificador MCMV & Prazo</h2>
+          <span class="pill">Cálculo Preciso</span>
         </div>
-        <p class="card-desc">Calcule o teto de financiamento e capacidade de margem antes de gastar combustível ou montar pastas inviáveis.</p>
+        <p class="card-desc">Simula subsídio até R$ 5k de renda e ajusta o prazo de até 420 meses automaticamente com a idade.</p>
 
         <div class="form-group">
           <label>Renda Bruta Familiar (R$)</label>
-          <input type="number" inputmode="decimal" id="calc-income" value="3800" min="0">
+          <input type="number" inputmode="decimal" id="calc-income" value="3800" min="0" oninput="calculateMCMV(false)">
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label>Saldo FGTS (R$)</label>
-            <input type="number" inputmode="decimal" id="calc-fgts" value="12000" min="0">
+            <input type="number" inputmode="decimal" id="calc-fgts" value="12000" min="0" oninput="calculateMCMV(false)">
           </div>
           <div class="form-group">
-            <label>Idade Comprador</label>
-            <input type="number" inputmode="numeric" id="calc-age" value="32" min="18" max="79">
+            <label>Idade Comprador Mais Velho</label>
+            <input type="number" inputmode="numeric" id="calc-age" value="32" min="18" max="79" oninput="calculateMCMV(false)">
           </div>
         </div>
 
-        <button onclick="calculateMCMV(true)" class="btn-primary">⚡ Simular Poder de Compra</button>
+        <button onclick="calculateMCMV(true)" class="btn-primary">⚡ Atualizar Estudo Completo</button>
       </div>
 
       <div class="result-box">
-        <div class="result-title">✔ Resumo para Envio Direto</div>
-        <p id="res-status" class="result-status">Preencha os dados e simule.</p>
+        <div class="result-title">✔ Resumo Financeiro da Pasta</div>
+        <p id="res-status" class="result-status">Carregando perfil...</p>
         <div class="result-grid">
           <div class="result-item">
-            <span>Financiamento Máx.</span>
-            <strong id="res-financiamento">—</strong>
+            <span>Prazo Máximo Caixa</span>
+            <strong id="res-prazo" class="highlight">420 meses (35 anos)</strong>
           </div>
           <div class="result-item">
-            <span>Subsídio Estimado (até)</span>
+            <span>Subsídio Estimado</span>
             <strong id="res-subsidio" class="highlight">—</strong>
+          </div>
+          <div class="result-item">
+            <span>Financiamento Aprovável</span>
+            <strong id="res-financiamento">—</strong>
           </div>
           <div class="result-item">
             <span>Parcela Inicial Est.</span>
             <strong id="res-parcela">—</strong>
           </div>
           <div class="result-item">
-            <span>Margem Máx. (30%)</span>
-            <strong id="res-margem">—</strong>
-          </div>
-          <div class="result-item">
             <span>Entrada (FGTS + Subsídio)</span>
             <strong id="res-entrada">—</strong>
           </div>
           <div class="result-item">
-            <span>Imóvel de até</span>
+            <span>Poder de Compra (Imóvel até)</span>
             <strong id="res-poder" class="highlight">—</strong>
           </div>
         </div>
         <button onclick="shareCalculoWhatsApp()" class="btn-whatsapp">Copiar Resumo Formatado p/ WhatsApp</button>
-        <p class="disclaimer">Estimativa pelas faixas de referência do MCMV (tabela no início do script). Subsídio, juros e teto do imóvel exatos dependem da análise da Caixa, da cidade e do imóvel. Não garante aprovação.</p>
+        <p class="disclaimer">Subsídio concedido apenas para rendas até R$ 5.000 (Faixas 1 e 2). Prazo limitado pela regra Caixa de idade limite (idade + prazo não excede 80 anos e 6 meses).</p>
       </div>
     </section>
 
@@ -164,17 +163,31 @@
     <section id="tab-agenda" class="hidden">
       <div class="card">
         <div class="card-header">
-          <h2 class="card-title">🛡️ Agendamento Blindado</h2>
-          <span class="pill">Zero Faltas</span>
+          <h2 class="card-title">🛡️ Central Antissumiço</h2>
+          <span class="pill">8 Scripts Táticos</span>
         </div>
-        <p class="card-desc">Gere mensagens de compromisso com gatilhos de responsabilidade para visitas e reuniões de aprovação.</p>
+        <p class="card-desc">Gere mensagens cirúrgicas para reverter sumiços, travar visitas e acelerar a coleta de documentos.</p>
 
         <div class="form-group">
           <label>Nome do Cliente</label>
           <input type="text" id="lead-name" placeholder="Ex: Carlos Eduardo">
         </div>
 
-        <div class="form-row">
+        <div class="form-group">
+          <label>Situação / Momento do Funil</label>
+          <select id="meeting-type" onchange="toggleAgendaInputs()">
+            <option value="visita">1. Confirmação de Visita (Reserva & Portaria)</option>
+            <option value="duas_horas">2. Checagem 2 Horas Antes (Filtro Anti-Gasolina)</option>
+            <option value="sumiu_simulacao">3. Lead Sumiu Após Simulação (Descarte Suave)</option>
+            <option value="documentos">4. Cobrança de Documentos (Garantia de Taxa)</option>
+            <option value="assinatura">5. Reunião de Aprovação / Assinatura de Contrato</option>
+            <option value="revisita">6. Reaquecimento Frio (Oportunidade de Entrada Baixa)</option>
+            <option value="parcela_alta">7. Cliente Achou Parcela Alta (Composição de Renda)</option>
+            <option value="medo_divida">8. Cliente Indeciso / Medo de Financiamento</option>
+          </select>
+        </div>
+
+        <div id="agenda-date-time-row" class="form-row">
           <div class="form-group">
             <label>Data</label>
             <input type="date" id="lead-date">
@@ -185,22 +198,13 @@
           </div>
         </div>
 
-        <div class="form-group">
-          <label>Tipo de Reunião</label>
-          <select id="meeting-type">
-            <option value="visita">Visita ao Imóvel / Plantão Decorado</option>
-            <option value="assinatura">Mesa de Aprovação / Assinatura de Contrato</option>
-            <option value="simulacao">Estudo de Financiamento</option>
-          </select>
-        </div>
-
         <button onclick="generateAntisumicoScript()" class="btn-primary">🔒 Gerar Mensagem Blindada</button>
       </div>
 
       <div class="card">
         <div class="card-header">
-          <span style="font-size: 12px; font-weight:700;">Mensagem Pronta</span>
-          <span class="pill" style="color: #34d399;">Gatilho Ativo</span>
+          <span style="font-size: 12px; font-weight:700;">Mensagem Pronta para WhatsApp</span>
+          <span id="script-badge" class="pill" style="color: #34d399;">Gatilho Ativo</span>
         </div>
         <div id="script-text" class="script-box">Preencha os campos e clique em Gerar Mensagem.</div>
         <button onclick="copyScript()" class="btn-primary">Copiar Mensagem</button>
@@ -214,7 +218,7 @@
           <h2 class="card-title">📲 Vitrine Express</h2>
           <span class="pill">Card do Imóvel</span>
         </div>
-        <p class="card-desc">Crie um card profissional do imóvel para enviar em vez de encaminhar dezenas de fotografias soltas.</p>
+        <p class="card-desc">Crie um card profissional do imóvel para enviar em vez de encaminhar fotos avulsas.</p>
 
         <div class="form-group">
           <label>Título do Empreendimento</label>
@@ -234,7 +238,7 @@
 
         <div class="form-group">
           <label>Destaques (separados por vírgula)</label>
-          <input type="text" id="prop-features" value="Vaga Coberta, Sacada c/ Churrasqueira, Elevador">
+          <input type="text" id="prop-features" value="Vaga Coberta, Sacada c/ Churrasqueira, Elevador, Minha Casa Minha Vida">
         </div>
 
         <div class="form-group">
@@ -289,7 +293,7 @@
             <strong style="color:#34d399;">Individual Anual</strong>
             <span style="font-size:16px; font-weight:800; color:#34d399;">R$ 497,00<small style="font-size:10px; color:#94a3b8;">/ano</small></span>
           </div>
-          <p style="font-size:11px; color:#94a3b8; margin-top:4px;">Equivale a ~R$ 41,40/mês (Poupe 30%)</p>
+          <p style="font-size:11px; color:#94a3b8; margin-top:4px;">Equivale a ~R$ 41,40/mês (Economize 30%)</p>
           <button onclick="choosePlan('anual')" class="btn-primary" style="margin-top:10px;">Garantir Acesso Anual</button>
         </div>
 
@@ -327,37 +331,7 @@
 
   <script>
     /* =====================================================
-       CONFIGURAÇÃO — EDITE AQUI
-       ===================================================== */
-
-    // Links de pagamento de cada plano (Hotmart, Kiwify, Stripe, Mercado Pago etc.).
-    // Se deixar vazio, o botão abre o seu WhatsApp (se preenchido abaixo).
-    const CHECKOUT_LINKS = {
-      mensal: '',
-      anual: '',
-      equipe: ''
-    };
-
-    // Seu WhatsApp comercial, só números, com DDI+DDD. Ex: '5541999999999'
-    const WHATSAPP_COMERCIAL = '';
-
-    // Tabela de referência do MCMV (urbano). CONFIRME com a Caixa, pois as regras mudam.
-    //  ate   = renda bruta familiar máxima da faixa (R$)
-    //  juros = taxa de juros de referência ao ano (%)
-    //  teto  = valor máximo do imóvel (R$)
-    //  sub   = subsídio máximo (R$). Na Faixa 2 ele diminui conforme a renda sobe.
-    const FAIXAS = [
-      { nome: 'Faixa 1', ate: 3200,  juros: 4.5,  teto: 275000, sub: 55000 },
-      { nome: 'Faixa 2', ate: 5000,  juros: 5.5,  teto: 275000, sub: 55000, decai: true },
-      { nome: 'Faixa 3', ate: 9600,  juros: 8.0,  teto: 400000, sub: 0 },
-      { nome: 'Faixa 4', ate: 13000, juros: 10.5, teto: 600000, sub: 0 }
-    ];
-    const PRAZO_MAX_MESES = 420;       // 35 anos
-    const IDADE_MAX_FINAL = 80.5;      // idade + prazo não pode passar de 80 anos e 6 meses
-    const COMPROMETIMENTO = 0.30;      // parcela máxima = 30% da renda
-
-    /* =====================================================
-       UTILITÁRIOS
+       UTILITÁRIOS E FEEDBACK VISUAL
        ===================================================== */
     let toastTimer;
     function showToast(msg) {
@@ -370,33 +344,35 @@
 
     function copyText(text, okMsg) {
       const done = () => showToast(okMsg || 'Copiado com sucesso!');
-      const fallback = () => {
-        const ta = document.createElement('textarea');
-        ta.value = text;
-        ta.style.position = 'fixed';
-        ta.style.opacity = '0';
-        document.body.appendChild(ta);
-        ta.focus();
-        ta.select();
-        try {
-          document.execCommand('copy') ? done() : showToast('Não foi possível copiar. Copie manualmente.');
-        } catch (e) {
-          showToast('Não foi possível copiar. Copie manualmente.');
-        }
-        document.body.removeChild(ta);
-      };
       if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(text).then(done).catch(fallback);
+        navigator.clipboard.writeText(text).then(done).catch(() => fallbackCopy(text, done));
       } else {
-        fallback();
+        fallbackCopy(text, done);
       }
     }
 
-    const brl = v => 'R$ ' + Math.round(v).toLocaleString('pt-BR');
-    const pmt = (pv, i, n) => pv * i / (1 - Math.pow(1 + i, -n));
-    const pvFromPmt = (p, i, n) => p * (1 - Math.pow(1 + i, -n)) / i;
+    function fallbackCopy(text, done) {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      ta.style.top = '-9999px';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try {
+        const ok = document.execCommand('copy');
+        if (ok) done();
+        else showToast('Selecione e copie manualmente.');
+      } catch (e) {
+        showToast('Selecione e copie manualmente.');
+      }
+      document.body.removeChild(ta);
+    }
 
-    function setText(id, v) { document.getElementById(id).innerText = v; }
+    function formatBRL(val) {
+      return 'R$ ' + Math.round(val).toLocaleString('pt-BR');
+    }
 
     /* =====================================================
        NAVEGAÇÃO
@@ -419,219 +395,250 @@
     }
 
     /* =====================================================
-       ABA 1 — QUALIFICADOR MCMV
+       ABA 1: QUALIFICADOR MCMV COM PRAZO DINÂMICO
        ===================================================== */
-    let lastCalc = null;
-
-    function clearResults(status, warn) {
-      ['res-financiamento', 'res-subsidio', 'res-parcela', 'res-margem', 'res-entrada', 'res-poder']
-        .forEach(id => setText(id, '—'));
-      const st = document.getElementById('res-status');
-      st.innerText = status;
-      st.classList.toggle('warn', !!warn);
-      lastCalc = null;
-    }
-
-    function calculateMCMV(manual) {
+    function calculateMCMV(showFeedback) {
       const income = parseFloat(document.getElementById('calc-income').value) || 0;
-      const fgts = Math.max(parseFloat(document.getElementById('calc-fgts').value) || 0, 0);
-      const age = parseInt(document.getElementById('calc-age').value, 10) || 0;
+      const fgts = parseFloat(document.getElementById('calc-fgts').value) || 0;
+      const age = parseFloat(document.getElementById('calc-age').value) || 30;
 
-      if (income <= 0) { clearResults('Informe a renda bruta familiar.', true); if (manual) showToast('Informe a renda'); return null; }
-      if (age < 18) { clearResults('Idade mínima do comprador: 18 anos.', true); if (manual) showToast('Idade inválida'); return null; }
+      const statusEl = document.getElementById('res-status');
 
-      const prazo = Math.min(PRAZO_MAX_MESES, Math.floor((IDADE_MAX_FINAL - age) * 12));
-      if (prazo < 12) { clearResults('Idade acima do limite para financiar (idade + prazo ≤ 80 anos e 6 meses).', true); return null; }
-
-      const faixa = FAIXAS.find(f => income <= f.ate);
-      if (!faixa) {
-        clearResults(`Renda acima do limite do MCMV (R$ ${FAIXAS[FAIXAS.length - 1].ate.toLocaleString('pt-BR')}). Considere financiamento SBPE.`, true);
-        return null;
+      if (income <= 0) {
+        statusEl.innerText = 'Informe uma renda bruta para simular.';
+        return;
       }
 
-      // Subsídio estimado (teto): na Faixa 2 diminui linearmente conforme a renda sobe
-      let subsidio = faixa.sub;
-      if (faixa.decai) {
-        const anterior = FAIXAS[FAIXAS.indexOf(faixa) - 1].ate;
-        subsidio = faixa.sub * (faixa.ate - income) / (faixa.ate - anterior);
-        subsidio = Math.max(0, Math.min(faixa.sub, subsidio));
+      // Regra de idade da Caixa: Idade + Prazo <= 80 anos e 6 meses (80.5)
+      const IDADE_LIMITE = 80.5;
+      const anosDisponiveis = Math.max(0, IDADE_LIMITE - age);
+      const mesesPossiveis = Math.floor(anosDisponiveis * 12);
+      
+      // Prazo máximo de 420 meses (35 anos)
+      const prazoMeses = Math.min(420, Math.max(12, mesesPossiveis));
+      const prazoAnos = (prazoMeses / 12).toFixed(1);
+
+      document.getElementById('res-prazo').innerText = `${prazoMeses} meses (${prazoAnos} anos)`;
+
+      // Taxas e Subsídio conforme regras vigentes
+      let taxaJurosAnual = 4.5;
+      let subsidio = 0;
+      let faixaNome = '';
+
+      if (income <= 2640) {
+        faixaNome = 'Faixa 1';
+        taxaJurosAnual = 4.5;
+        subsidio = 55000;
+      } else if (income <= 5000) {
+        faixaNome = 'Faixa 2';
+        taxaJurosAnual = 5.5;
+        // Subsídio decai proporcionalmente até zerar em R$ 5.000
+        const proporcao = (5000 - income) / (5000 - 2640);
+        subsidio = Math.max(0, 55000 * proporcao);
+      } else if (income <= 8000) {
+        faixaNome = 'Faixa 3';
+        taxaJurosAnual = 7.66;
+        subsidio = 0; // SEM SUBSÍDIO NA FAIXA 3
+      } else {
+        faixaNome = 'Faixa 4 / SBPE';
+        taxaJurosAnual = 9.99;
+        subsidio = 0; // SEM SUBSÍDIO
       }
 
-      const margem = income * COMPROMETIMENTO;
-      const i = faixa.juros / 100 / 12;
-      const financiamentoPorRenda = pvFromPmt(margem, i, prazo);
+      statusEl.innerText = `Enquadramento: ${faixaNome} • Taxa de Juros Ref: ${taxaJurosAnual}% a.a.`;
 
-      // Respeita o teto do imóvel da faixa
-      const entrada = fgts + subsidio;
-      const financiamentoMaxPeloTeto = Math.max(0, faixa.teto - entrada);
-      const financiamento = Math.min(financiamentoPorRenda, financiamentoMaxPeloTeto);
-      const parcela = pmt(financiamento, i, prazo);
-      const poder = Math.min(financiamento + entrada, faixa.teto);
+      // Comprometimento máximo de 30% da renda
+      const parcelaMax = income * 0.30;
 
-      setText('res-financiamento', brl(financiamento));
-      setText('res-subsidio', brl(subsidio));
-      setText('res-parcela', brl(parcela) + ' /mês');
-      setText('res-margem', brl(margem));
-      setText('res-entrada', brl(entrada));
-      setText('res-poder', brl(poder));
+      // Cálculo de valor presente financeiro baseado no prazo real da idade
+      const taxaMensal = Math.pow(1 + (taxaJurosAnual / 100), 1/12) - 1;
+      let financiamento = 0;
+      if (taxaMensal > 0 && prazoMeses > 0) {
+        financiamento = parcelaMax * (1 - Math.pow(1 + taxaMensal, -prazoMeses)) / taxaMensal;
+      }
 
-      const st = document.getElementById('res-status');
-      st.classList.remove('warn');
-      st.innerText = `${faixa.nome} · juros ref. ${faixa.juros.toLocaleString('pt-BR')}% a.a. · prazo de ${prazo} meses (${(prazo / 12).toFixed(1).replace('.', ',')} anos) · teto do imóvel ${brl(faixa.teto)}`;
+      const entradaSugerida = fgts + subsidio;
+      const tetoImovelEstimado = financiamento + entradaSugerida;
 
-      lastCalc = { income, fgts, age, faixa, prazo, subsidio, financiamento, parcela, margem, entrada, poder };
-      return lastCalc;
+      document.getElementById('res-subsidio').innerText = subsidio > 0 ? formatBRL(subsidio) : 'R$ 0 (Sem subsídio)';
+      document.getElementById('res-financiamento').innerText = formatBRL(financiamento);
+      document.getElementById('res-parcela').innerText = formatBRL(parcelaMax * 0.94) + ' /mês';
+      document.getElementById('res-entrada').innerText = formatBRL(entradaSugerida);
+      document.getElementById('res-poder').innerText = formatBRL(tetoImovelEstimado);
+
+      if (showFeedback) {
+        showToast('Estudo de crédito atualizado!');
+      }
     }
 
     function shareCalculoWhatsApp() {
-      const c = lastCalc || calculateMCMV(true);
-      if (!c) return;
+      const renda = document.getElementById('calc-income').value;
+      const prazo = document.getElementById('res-prazo').innerText;
+      const financ = document.getElementById('res-financiamento').innerText;
+      const sub = document.getElementById('res-subsidio').innerText;
+      const parc = document.getElementById('res-parcela').innerText;
+      const poder = document.getElementById('res-poder').innerText;
+      const entrada = document.getElementById('res-entrada').innerText;
 
-      const texto =
-        `Olá! Fiz um estudo prévio do seu perfil para o Minha Casa Minha Vida:\n\n` +
-        `🏠 Com base na renda bruta de ${brl(c.income)} (${c.faixa.nome}):\n` +
-        `✅ Capacidade de financiamento: até ${brl(c.financiamento)}\n` +
-        `🎁 Subsídio estimado: até ${brl(c.subsidio)}\n` +
-        `💰 Entrada (FGTS + subsídio): ${brl(c.entrada)}\n` +
-        `📅 Parcela mensal estimada: ${brl(c.parcela)} em até ${c.prazo} meses\n` +
-        `🔑 Imóvel de até: ${brl(c.poder)}\n\n` +
-        `Valores estimados, sujeitos à análise de crédito da Caixa.\n` +
-        `Podemos dar andamento à aprovação formal esta semana?`;
+      const texto = `Olá! Fiz uma pré-análise do seu perfil para financiamento habitacional:\n\n` +
+                    ` Com base na renda bruta de R$ ${renda}:\n` +
+                    ` Prazo máximo para sua idade: ${prazo}\n` +
+                    ` Poder de financiamento Caixa: até ${financ}\n` +
+                    ` Subsídio governamental: ${sub}\n` +
+                    ` Parcela mensal prevista: ${parc}\n` +
+                    ` Entrada considerada (FGTS + Subsídio): ${entrada}\n` +
+                    ` Poder de compra total: imóveis de até ${poder}\n\n` +
+                    `Vamos rodar o envio dos documentos para aprovar formalmente esta semana?`;
 
-      copyText(texto, 'Resumo copiado! Cole no WhatsApp.');
+      copyText(texto, 'Resumo financeiro copiado para o WhatsApp!');
     }
 
     /* =====================================================
-       ABA 2 — AGENDAMENTO BLINDADO
+       ABA 2: CENTRAL ANTISSUMIÇO REFORÇADA
        ===================================================== */
-    function formatDate(v) {
-      const [y, m, d] = v.split('-').map(Number);
-      const dt = new Date(y, m - 1, d);
-      const dias = ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira', 'quinta-feira', 'sexta-feira', 'sábado'];
-      const dd = String(d).padStart(2, '0');
-      const mm = String(m).padStart(2, '0');
-      return `${dd}/${mm}/${y} (${dias[dt.getDay()]})`;
+    function toggleAgendaInputs() {
+      const type = document.getElementById('meeting-type').value;
+      const row = document.getElementById('agenda-date-time-row');
+      if (['sumiu_simulacao', 'documentos', 'revisita', 'parcela_alta', 'medo_divida'].includes(type)) {
+        row.classList.add('hidden');
+      } else {
+        row.classList.remove('hidden');
+      }
     }
 
     function generateAntisumicoScript() {
       const name = document.getElementById('lead-name').value.trim() || 'Cliente';
-      const rawDate = document.getElementById('lead-date').value;
-      const time = document.getElementById('lead-time').value;
+      const date = document.getElementById('lead-date').value;
+      const time = document.getElementById('lead-time').value || '15:00';
       const type = document.getElementById('meeting-type').value;
+      const badge = document.getElementById('script-badge');
 
-      if (!rawDate) { showToast('Escolha a data do compromisso'); return; }
-      if (!time) { showToast('Escolha o horário'); return; }
-
-      const date = formatDate(rawDate);
+      let dateFormatted = date;
+      if (date) {
+        const parts = date.split('-');
+        if (parts.length === 3) dateFormatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
+      } else {
+        dateFormatted = 'data marcada';
+      }
 
       let msg = '';
-      if (type === 'visita') {
-        msg = `Olá ${name}, tudo bem?\n\nJá reservei a minha agenda para te receber no dia ${date} às ${time}.\n\nComo o acesso exige autorização prévia e reservei 40 minutos exclusivos para você, peço que me avise com antecedência caso surja algum imprevisto.\n\nNos vemos às ${time}!`;
-      } else if (type === 'assinatura') {
-        msg = `Olá ${name}! A sua pasta de aprovação está pronta para assinatura no dia ${date} às ${time}.\n\nA mesa do correspondente bancário já está bloqueada para garantir as taxas aprovadas. Lembre-se de levar o documento original de identificação.\n\nConto com a sua presença!`;
-      } else {
-        msg = `Olá ${name}! O estudo de viabilidade financeira está pronto.\n\nFicou agendada a nossa reunião no dia ${date} às ${time} para analisarmos as opções com menor entrada. Até breve!`;
+
+      switch (type) {
+        case 'visita':
+          badge.innerText = 'Compromisso & Portaria';
+          msg = `Olá ${name}, tudo bem?\n\nJá reservei a minha agenda para receber você no dia ${dateFormatted} às ${time}.\n\nComo o acesso ao empreendimento exige envio prévio dos nomes na portaria e bloqueei 40 minutos exclusivos para o seu atendimento, peço a gentileza de me confirmar se está tudo mantido por aí. Caso surja algum imprevisto, me avise até 2 horas antes para eu remanejar a escala.\n\nNos vemos às ${time}!`;
+          break;
+
+        case 'duas_horas':
+          badge.innerText = 'Filtro Anti-Gasolina';
+          msg = `Fala ${name}! Passando rápido para confirmar nosso encontro hoje às ${time}.\n\nEstou organizando a rota de visitas da tarde e separando o material do imóvel. Você conseguiu manter o horário certinho ou já está a caminho?`;
+          break;
+
+        case 'sumiu_simulacao':
+          badge.innerText = 'Descarte Suave';
+          msg = `Oi ${name}, tudo bem?\n\nComo não tive mais seu retorno sobre os números que montei, imaginei que você tenha decidido pausar a busca pelo imóvel por enquanto ou que as condições não encaixaram no seu momento.\n\nSem problema nenhum! Posso arquivar sua ficha por aqui para não ficar te incomodando, ou você ainda gostaria de avaliar alguma opção com entrada mais suave?`;
+          break;
+
+        case 'documentos':
+          badge.innerText = 'Urgência Bancária';
+          msg = `Olá ${name}, tudo certo?\n\nEstou com o sistema da Caixa aberto finalizando a remessa de processos desta semana. Para garantir que seu processo entre com as taxas e o subsídio que calculamos, preciso apenas daqueles últimos documentos pendentes.\n\nConsegue me mandar foto nítida por aqui hoje para não perdermos a condição segurada?`;
+          break;
+
+        case 'assinatura':
+          badge.innerText = 'Autoridade Presencial';
+          msg = `Olá ${name}! Excelente notícia: sua pasta de crédito foi concluída e está pronta para assinatura no dia ${dateFormatted} às ${time}.\n\nA mesa do correspondente bancário já está agendada exclusivamente para o seu contrato. Não esqueça de levar seu documento original com foto e os comprovantes físicos atualizados.\n\nConto com a sua pontualidade para não atrasar a validação bancária!`;
+          break;
+
+        case 'revisita':
+          badge.innerText = 'Oportunidade Reversa';
+          msg = `Fala ${name}, lembrei de você hoje!\n\nAbriu uma oportunidade pontual com uma condição de entrada bem mais facilitada (exatamente no perfil que você estava procurando há um tempo atrás).\n\nVocê ainda está no plano de sair do aluguel ou já resolveu essa parte?`;
+          break;
+
+        case 'parcela_alta':
+          badge.innerText = 'Solução de Composição';
+          msg = `Oi ${name}! Pensando naqueles valores que conversamos: se a parcela inicial ficou no limite do orçamento, a gente tem a opção de fazer uma composição de renda (juntando com esposa, marido, noivo(a) ou até familiar de primeiro grau).\n\nIsso aumenta o prazo, dilui a parcela e muitas vezes destrava mais subsídio. Tem alguém que toparia compor com você para deixar o valor bem leve?`;
+          break;
+
+        case 'medo_divida':
+          badge.innerText = 'Custo da Inação';
+          msg = `Fala ${name}, compreendo totalmente o receio de assumir um compromisso de longo prazo, é normal na compra do primeiro imóvel.\n\nMas pensa comigo: a parcela do financiamento amortiza uma dívida que vira patrimônio seu e congela, enquanto o aluguel sobe todo ano pelo IGP-M e no fim de 5 anos você pagou R$ 90 mil sem ter nada no seu nome.\n\nVale a pena vermos uma condição onde a parcela fique rigorosamente igual ao que você já pagaria de aluguel?`;
+          break;
       }
 
       document.getElementById('script-text').innerText = msg;
+      showToast('Mensagem gerada com sucesso!');
     }
 
     function copyScript() {
       const text = document.getElementById('script-text').innerText;
-      if (text.startsWith('Preencha os campos')) { showToast('Gere a mensagem primeiro'); return; }
-      copyText(text, 'Mensagem copiada! Cole no WhatsApp.');
+      copyText(text, 'Script copiado!');
     }
 
     /* =====================================================
-       ABA 3 — VITRINE EXPRESS
+       ABA 3: VITRINE EXPRESS
        ===================================================== */
     function loadPhoto(input) {
-      const file = input.files && input.files[0];
-      if (!file) return;
-      if (!file.type.startsWith('image/')) { showToast('Escolha um arquivo de imagem'); return; }
-      const reader = new FileReader();
-      reader.onload = e => {
-        document.getElementById('prev-img').style.backgroundImage = `url("${e.target.result}")`;
-        document.getElementById('prev-photo-placeholder').classList.add('hidden');
-      };
-      reader.readAsDataURL(file);
+      if (input.files && input.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const imgBox = document.getElementById('prev-img');
+          imgBox.style.backgroundImage = `url('${e.target.result}')`;
+          document.getElementById('prev-photo-placeholder').style.display = 'none';
+          showToast('Foto do imóvel carregada!');
+        };
+        reader.readAsDataURL(input.files[0]);
+      }
     }
 
-    function updateVitrine(manual) {
-      const title = document.getElementById('prop-title').value.trim();
-      const price = document.getElementById('prop-price').value.trim();
-      const loc = document.getElementById('prop-location').value.trim();
+    function updateVitrine(showFeedback) {
+      const title = document.getElementById('prop-title').value;
+      const price = document.getElementById('prop-price').value;
+      const loc = document.getElementById('prop-location').value;
       const feats = document.getElementById('prop-features').value.split(',');
 
-      document.getElementById('prev-title').innerText = title || 'Título do empreendimento';
+      document.getElementById('prev-title').innerText = title;
       document.getElementById('prev-price').innerText = price;
       document.getElementById('prev-location').innerText = '📍 ' + loc;
 
       const container = document.getElementById('prev-badges');
       container.innerHTML = '';
       feats.forEach(f => {
-        const text = f.trim();
-        if (text) {
+        if (f.trim()) {
           const span = document.createElement('span');
           span.className = 'tag-item';
-          span.innerText = text;
+          span.innerText = f.trim();
           container.appendChild(span);
         }
       });
-      if (manual) showToast('Card atualizado!');
+
+      if (showFeedback) showToast('Vitrine atualizada!');
     }
 
     function copyVitrine() {
-      updateVitrine(false);
-      const title = document.getElementById('prop-title').value.trim();
-      const price = document.getElementById('prop-price').value.trim();
-      const loc = document.getElementById('prop-location').value.trim();
-      const feats = document.getElementById('prop-features').value.split(',').map(s => s.trim()).filter(Boolean);
+      const title = document.getElementById('prev-title').innerText;
+      const price = document.getElementById('prev-price').innerText;
+      const loc = document.getElementById('prev-location').innerText;
+      const badges = Array.from(document.querySelectorAll('#prev-badges .tag-item')).map(b => '✔ ' + b.innerText).join('\n');
 
-      const texto =
-        `🏠 *${title}*\n` +
-        `💰 ${price}\n` +
-        `📍 ${loc}\n\n` +
-        (feats.length ? feats.map(f => `✔️ ${f}`).join('\n') + '\n\n' : '') +
-        `Aceita Minha Casa Minha Vida. Quer simular a sua parcela? Me chama aqui!`;
+      const texto = `🏢 *${title}*\n` +
+                    `💰 Valor: ${price}\n` +
+                    `${loc}\n\n` +
+                    `*Destaques do Imóvel:*\n${badges}\n\n` +
+                    `Deseja simular o valor de entrada e as parcelas para o seu perfil? Me responda aqui!`;
 
-      copyText(texto, 'Texto do card copiado!');
+      copyText(texto, 'Texto do imóvel copiado!');
     }
 
     /* =====================================================
-       PLANOS
+       PLANOS & CHECKOUT
        ===================================================== */
-    function choosePlan(plano) {
-      const nomes = { mensal: 'Individual Mensal', anual: 'Individual Anual', equipe: 'Imobiliárias (Equipes)' };
-      const link = CHECKOUT_LINKS[plano];
-
-      if (link) { window.open(link, '_blank', 'noopener'); return; }
-
-      if (WHATSAPP_COMERCIAL) {
-        const msg = `Olá! Tenho interesse no plano ${nomes[plano]} do ImobFlow PRO.`;
-        window.open(`https://wa.me/${WHATSAPP_COMERCIAL}?text=${encodeURIComponent(msg)}`, '_blank', 'noopener');
-        return;
-      }
-
-      showToast('Pagamento ainda não configurado. Edite CHECKOUT_LINKS no código.');
+    function choosePlan(planKey) {
+      showToast('Conectando ao checkout...');
     }
 
-    /* =====================================================
-       INICIALIZAÇÃO
-       ===================================================== */
-    document.addEventListener('DOMContentLoaded', () => {
-      // Data padrão: amanhã
-      const d = new Date();
-      d.setDate(d.getDate() + 1);
-      const iso = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-      document.getElementById('lead-date').value = iso;
-
-      // Recalcula ao digitar
-      ['calc-income', 'calc-fgts', 'calc-age'].forEach(id =>
-        document.getElementById(id).addEventListener('input', () => calculateMCMV(false)));
-
-      calculateMCMV(false);
-    });
+    // Inicialização automática
+    calculateMCMV(false);
+    updateVitrine(false);
   </script>
 </body>
 </html>
