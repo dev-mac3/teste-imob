@@ -4,12 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ImobFlow - Central de Fechamento</title>
+  <!-- Biblioteca para baixar o card como imagem -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background-color: #020617; color: #f8fafc; padding-bottom: 110px; }
 
     /* Topbar */
-    header { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(8px); border-bottom: 1px solid #1e293b; position: sticky; top: 0; z-index: 20; padding: 12px 16px; }
+    header { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(8px); border-bottom: 1px solid #1e293b; position: sticky; top: 0; z-index: 40; padding: 12px 16px; }
     .topbar-content { max-width: 480px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; }
     .logo-box { display: flex; align-items: center; gap: 10px; }
     .logo-badge { width: 34px; height: 34px; background: #10b981; border-radius: 8px; color: #020617; font-weight: 900; display: flex; align-items: center; justify-content: center; font-size: 16px; }
@@ -18,7 +20,7 @@
     .logo-text p { font-size: 11px; color: #94a3b8; }
     .btn-planos { background: #1e293b; border: 1px solid #334155; color: #f1f5f9; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 600; cursor: pointer; }
 
-    /* Container Principal */
+    /* Container */
     main { max-width: 480px; margin: 0 auto; padding: 16px; position: relative; z-index: 10; }
     .card { background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; padding: 16px; margin-bottom: 16px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.5); }
     .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
@@ -26,7 +28,7 @@
     .pill { background: #1e293b; color: #94a3b8; font-size: 10px; padding: 3px 8px; border-radius: 20px; font-weight: 600; }
     .card-desc { font-size: 12px; color: #94a3b8; margin-bottom: 16px; line-height: 1.4; }
 
-    /* Formulários */
+    /* Forms */
     .form-group { margin-bottom: 12px; }
     .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     label { display: block; font-size: 11px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px; }
@@ -39,6 +41,7 @@
     .btn-action:active { transform: scale(0.98); opacity: 0.9; }
     .btn-emerald { background: #10b981; color: #020617; margin-top: 8px; }
     .btn-secondary { background: #1e293b; border: 1px solid rgba(16, 185, 129, 0.3); color: #34d399; margin-top: 10px; font-weight: 600; font-size: 12px; }
+    .btn-download { background: #3b82f6; color: #ffffff; margin-top: 10px; }
 
     /* Resultados */
     .result-box { background: linear-gradient(135deg, #0f172a, #09101f); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
@@ -54,26 +57,35 @@
     /* Script Box */
     .script-box { background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px; font-size: 12px; color: #cbd5e1; line-height: 1.5; white-space: pre-line; font-family: monospace; margin: 10px 0; }
 
-    /* Vitrine */
-    .vitrine-card { background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; overflow: hidden; margin-top: 12px; }
-    .vitrine-img { height: 170px; background: #020617 center / cover no-repeat; display: flex; align-items: center; justify-content: center; color: #475569; position: relative; font-size: 12px; }
-    .vitrine-badge { position: absolute; top: 10px; left: 10px; background: #10b981; color: #020617; font-size: 9px; font-weight: 800; padding: 3px 6px; border-radius: 4px; }
-    .vitrine-body { padding: 14px; }
+    /* Vitrine Card */
+    #card-export-area { background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; overflow: hidden; margin-top: 12px; }
+    .vitrine-img-container { height: 210px; background: #020617; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .vitrine-img { width: 100%; height: 100%; object-fit: cover; }
+    .vitrine-badge { position: absolute; top: 12px; left: 12px; background: #10b981; color: #020617; font-size: 9px; font-weight: 900; padding: 4px 8px; border-radius: 6px; z-index: 5; }
+    .vitrine-counter { position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); color: #fff; font-size: 10px; padding: 3px 8px; border-radius: 12px; z-index: 5; }
+    .gallery-dots { display: flex; gap: 6px; justify-content: center; padding: 8px; background: #0b1329; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #334155; cursor: pointer; }
+    .dot.active { background: #10b981; width: 18px; border-radius: 4px; }
+    
+    .vitrine-body { padding: 16px; }
     .vitrine-title-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 4px; }
-    .vitrine-title-row h4 { font-size: 14px; font-weight: 700; color: #fff; }
-    .vitrine-price { color: #34d399; font-weight: 800; font-size: 14px; white-space: nowrap; }
-    .vitrine-loc { font-size: 11px; color: #94a3b8; margin-bottom: 8px; }
-    .tags-container { display: flex; flex-wrap: wrap; gap: 4px; }
-    .tag-item { background: #1e293b; color: #cbd5e1; font-size: 10px; padding: 3px 8px; border-radius: 4px; }
+    .vitrine-title-row h4 { font-size: 15px; font-weight: 700; color: #fff; }
+    .vitrine-price { color: #34d399; font-weight: 900; font-size: 16px; white-space: nowrap; }
+    .vitrine-loc { font-size: 11px; color: #94a3b8; margin-bottom: 10px; }
+    .tags-container { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+    .tag-item { background: #1e293b; color: #cbd5e1; font-size: 10px; padding: 4px 8px; border-radius: 4px; }
+    
+    .corretor-footer { border-top: 1px dashed #334155; padding-top: 10px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #cbd5e1; }
+    .corretor-footer strong { color: #fff; }
 
-    /* Barra de Navegação Inferior */
+    /* Navegação Inferior */
     nav { position: fixed; bottom: 0; left: 0; right: 0; background: #0b1329; border-top: 1px solid #1e293b; z-index: 999; padding-bottom: env(safe-area-inset-bottom, 0px); }
     .nav-container { max-width: 480px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr 1fr; padding: 8px 12px; }
     .nav-btn { background: none; border: none; display: flex; flex-direction: column; align-items: center; gap: 4px; color: #64748b; font-size: 11px; font-weight: 600; cursor: pointer; padding: 8px 0; }
     .nav-btn.active { color: #10b981; }
     .nav-icon { font-size: 18px; margin-bottom: 2px; }
 
-    /* Aviso Toast */
+    /* Toast */
     .toast { position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%) translateY(20px); background: #10b981; color: #020617; padding: 10px 18px; border-radius: 8px; font-size: 12px; font-weight: 700; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 1000; max-width: 90%; text-align: center; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -97,57 +109,57 @@
   </header>
 
   <main>
-    <!-- ABA 1: CALCULADORA -->
+    <!-- ABA 1: CALCULADORA COM FORMATAÇÃO AUTOMÁTICA -->
     <section id="tab-calculator">
       <div class="card">
         <div class="card-header">
           <h2 class="card-title">⚡ Estudo de Financiamento</h2>
-          <span class="pill">Cálculo Direto</span>
+          <span class="pill">Assertivo Caixa</span>
         </div>
-        <p class="card-desc">Informe o valor do imóvel e a renda para calcular a entrada e a parcela aproximada.</p>
+        <p class="card-desc">Digite os valores; as pontuações e a regra de amortização são calculadas em tempo real.</p>
 
         <div class="form-group">
           <label>Valor do Imóvel Desejado (R$)</label>
-          <input type="number" inputmode="decimal" id="calc-imovel" value="240000" oninput="calcularFinanciamento(false)">
+          <input type="text" inputmode="numeric" id="calc-imovel" value="1.800.000,00" oninput="aplicarMascaraMoeda(this); calcularFinanciamento(false)">
         </div>
 
         <div class="form-group">
           <label>Renda Bruta Familiar (R$)</label>
-          <input type="number" inputmode="decimal" id="calc-income" value="3800" oninput="calcularFinanciamento(false)">
+          <input type="text" inputmode="numeric" id="calc-income" value="34.998,00" oninput="aplicarMascaraMoeda(this); calcularFinanciamento(false)">
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label>Saldo FGTS (R$)</label>
-            <input type="number" inputmode="decimal" id="calc-fgts" value="12000" oninput="calcularFinanciamento(false)">
+            <input type="text" inputmode="numeric" id="calc-fgts" value="120.000,00" oninput="aplicarMascaraMoeda(this); calcularFinanciamento(false)">
           </div>
           <div class="form-group">
             <label>Idade do Comprador</label>
-            <input type="number" inputmode="numeric" id="calc-age" value="32" oninput="calcularFinanciamento(false)">
+            <input type="number" inputmode="numeric" id="calc-age" value="32" min="18" max="79" oninput="calcularFinanciamento(false)">
           </div>
         </div>
 
-        <button type="button" onclick="calcularFinanciamento(true)" class="btn-action btn-emerald">⚡ Calcular Financiamento</button>
+        <button type="button" onclick="calcularFinanciamento(true)" class="btn-action btn-emerald">⚡ Atualizar Financiamento</button>
       </div>
 
       <div class="result-box">
-        <div class="result-title">✔ Resumo para o Cliente</div>
-        <p id="res-status" class="result-status">A calcular estudo...</p>
+        <div class="result-title">✔ Diagnóstico Bancário de Aprovação</div>
+        <p id="res-status" class="result-status">Aguardando dados...</p>
         <div class="result-grid">
           <div class="result-item">
-            <span>Prazo Máximo</span>
+            <span>Prazo Máximo Caixa</span>
             <strong id="res-prazo" class="highlight">420 meses</strong>
           </div>
           <div class="result-item">
-            <span>Parcela Inicial Est.</span>
+            <span>1ª Parcela Est. (SAC)</span>
             <strong id="res-parcela">—</strong>
           </div>
           <div class="result-item">
-            <span>Financiamento Aprovável</span>
+            <span>Financiamento Máx. (80%)</span>
             <strong id="res-financiamento">—</strong>
           </div>
           <div class="result-item">
-            <span>Entrada Restante</span>
+            <span>Entrada em Recursos</span>
             <strong id="res-entrada" class="highlight">—</strong>
           </div>
           <div class="result-item">
@@ -155,12 +167,12 @@
             <strong id="res-fgts">—</strong>
           </div>
           <div class="result-item">
-            <span>Poder Total de Compra</span>
-            <strong id="res-poder">—</strong>
+            <span>Margem Máx. Caixa (30%)</span>
+            <strong id="res-margem">—</strong>
           </div>
         </div>
         <button type="button" onclick="copiarResumoWhatsApp()" class="btn-action btn-secondary">Copiar Resumo p/ WhatsApp</button>
-        <p class="disclaimer">Financiamento sujeito à aprovação de crédito bancário. A Caixa financia habitualmente até 80% da avaliação do imóvel.</p>
+        <p class="disclaimer">Financiamento imobiliário considera teto de até 80% do valor do imóvel e margem de 30% da renda. Sujeito à análise cadastral e avaliação bancária.</p>
       </div>
     </section>
 
@@ -216,67 +228,84 @@
       </div>
     </section>
 
-    <!-- ABA 3: VITRINE -->
+    <!-- ABA 3: VITRINE MASTERIZADA -->
     <section id="tab-vitrine" class="hidden">
       <div class="card">
         <div class="card-header">
-          <h2 class="card-title">📲 Vitrine Express</h2>
-          <span class="pill">Card do Imóvel</span>
+          <h2 class="card-title">📲 Gerador de Vitrine Imobiliária</h2>
+          <span class="pill">Multi-Fotos & Download</span>
         </div>
-        <p class="card-desc">Crie um card limpo do imóvel para enviar em vez de encaminhar fotos avulsas.</p>
+        <p class="card-desc">Carregue várias fotos, gere um card de alta qualidade e baixe como imagem para publicar onde quiser.</p>
+
+        <div class="form-group">
+          <label>Fotos do Imóvel (Selecione 1 ou várias de uma vez)</label>
+          <input type="file" id="prop-photos-input" accept="image/*" multiple onchange="carregarMultiplasFotos(this)">
+        </div>
 
         <div class="form-group">
           <label>Título do Imóvel</label>
-          <input type="text" id="prop-title" value="Residencial Araucária - 2 Qts">
+          <input type="text" id="prop-title" value="Apartamento Alto Padrão - 3 Suítes">
         </div>
 
         <div class="form-row">
           <div class="form-group">
-            <label>Preço (R$)</label>
-            <input type="text" id="prop-price" value="R$ 239.000">
+            <label>Preço</label>
+            <input type="text" id="prop-price" value="R$ 1.800.000,00" oninput="aplicarMascaraMoeda(this); atualizarVitrineCard()">
           </div>
           <div class="form-group">
             <label>Bairro / Cidade</label>
-            <input type="text" id="prop-location" value="Portão - Curitiba/PR">
+            <input type="text" id="prop-location" value="Batel - Curitiba/PR">
           </div>
         </div>
 
         <div class="form-group">
           <label>Destaques (separados por vírgula)</label>
-          <input type="text" id="prop-features" value="Vaga Coberta, Sacada c/ Churrasqueira, Elevador">
+          <input type="text" id="prop-features" value="3 Vagas Cobertas, Churrasqueira Gourmet, Vista Panorâmica">
         </div>
 
-        <div class="form-group">
-          <label>Foto de Capa</label>
-          <input type="file" id="prop-photo" accept="image/*" onchange="carregarFotoVitrine(this)">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Seu Nome / Empresa</label>
+            <input type="text" id="prop-agent" value="Gabriel Macena - Corretor">
+          </div>
+          <div class="form-group">
+            <label>Telefone / WhatsApp</label>
+            <input type="text" id="prop-phone" value="(41) 98782-9577">
+          </div>
         </div>
 
-        <button type="button" onclick="atualizarVitrineCard()" class="btn-action btn-emerald">✨ Atualizar Card</button>
+        <button type="button" onclick="atualizarVitrineCard()" class="btn-action btn-emerald">✨ Atualizar Pré-visualização</button>
       </div>
 
-      <div class="vitrine-card">
-        <div id="prev-img" class="vitrine-img">
-          <span class="vitrine-badge">OPORTUNIDADE</span>
-          <span id="prev-photo-placeholder">[Fotografia do Imóvel]</span>
+      <!-- CARD EXPORTÁVEL -->
+      <div id="card-export-area">
+        <div class="vitrine-img-container">
+          <span class="vitrine-badge">OPORTUNIDADE EXCLUSIVA</span>
+          <img id="main-preview-img" class="vitrine-img" src="" style="display:none;" alt="Imóvel">
+          <span id="prev-photo-placeholder" style="color: #64748b; font-size: 13px;">[Nenhuma foto carregada]</span>
+          <span id="photo-counter" class="vitrine-counter" style="display:none;">1 / 1</span>
         </div>
+        <div id="gallery-dots-bar" class="gallery-dots" style="display:none;"></div>
         <div class="vitrine-body">
           <div class="vitrine-title-row">
-            <h4 id="prev-title">Residencial Araucária - 2 Qts</h4>
-            <span id="prev-price" class="vitrine-price">R$ 239.000</span>
+            <h4 id="prev-title">Apartamento Alto Padrão - 3 Suítes</h4>
+            <span id="prev-price" class="vitrine-price">R$ 1.800.000,00</span>
           </div>
-          <p id="prev-location" class="vitrine-loc">📍 Portão - Curitiba/PR</p>
-          <div id="prev-badges" class="tags-container">
-            <span class="tag-item">Vaga Coberta</span>
-            <span class="tag-item">Sacada c/ Churrasqueira</span>
-            <span class="tag-item">Elevador</span>
+          <p id="prev-location" class="vitrine-loc">📍 Batel - Curitiba/PR</p>
+          <div id="prev-badges" class="tags-container"></div>
+          
+          <div class="corretor-footer">
+            <span id="prev-agent">Atendimento: <strong>Gabriel Macena</strong></span>
+            <span id="prev-phone">📞 <strong>(41) 98782-9577</strong></span>
           </div>
-          <button type="button" onclick="irParaAba('calculator')" class="btn-action btn-emerald" style="margin-top: 14px;">Quero Simular Este Imóvel</button>
-          <button type="button" onclick="copiarTextoVitrine()" class="btn-action btn-secondary">Copiar Texto p/ WhatsApp</button>
         </div>
       </div>
+
+      <button type="button" onclick="baixarCardComoImagem()" class="btn-action btn-download">📥 Baixar Card em Imagem (PNG)</button>
+      <button type="button" onclick="copiarTextoVitrine()" class="btn-action btn-secondary">Copiar Legenda p/ WhatsApp</button>
     </section>
 
-    <!-- SECÇÃO PLANOS -->
+    <!-- PLANOS -->
     <section id="tab-planos" class="hidden">
       <div class="card" style="border-color: #3b82f6;">
         <div class="card-header">
@@ -307,14 +336,14 @@
             <strong style="color:#c084fc;">Imobiliárias (Equipes)</strong>
             <span style="font-size:16px; font-weight:800; color:#c084fc;">R$ 997,00<small style="font-size:10px; color:#94a3b8;">/mês</small></span>
           </div>
-          <p style="font-size:11px; color:#94a3b8; margin-top:4px;">Até 50 corretores + Painel de Gestor + Logo própria</p>
-          <button type="button" onclick="abrirCheckout('equipe')" class="btn-action" style="background:#9333ea; color:#fff; margin-top:10px;">Contratar para a Equipa</button>
+          <p style="font-size:11px; color:#94a3b8; margin-top:4px;">Até 50 corretores + Painel de Gestor</p>
+          <button type="button" onclick="abrirCheckout('equipe')" class="btn-action" style="background:#9333ea; color:#fff; margin-top:10px;">Contratar para a Equipe</button>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- Barra de Navegação Inferior -->
+  <!-- Navegação -->
   <nav>
     <div class="nav-container">
       <button type="button" id="nav-calculator" onclick="irParaAba('calculator')" class="nav-btn active">
@@ -336,6 +365,8 @@
 
   <script>
     var temporizadorToast;
+    var fotosGaleria = [];
+    var fotoIndexAtual = 0;
 
     function mostrarToast(msg) {
       var t = document.getElementById('toast');
@@ -345,7 +376,30 @@
       clearTimeout(temporizadorToast);
       temporizadorToast = setTimeout(function() {
         t.className = 'toast';
-      }, 2200);
+      }, 2400);
+    }
+
+    /* MÁSCARA AUTOMÁTICA DE MOEDA (R$ 1.800.000,00) */
+    function aplicarMascaraMoeda(input) {
+      var valor = input.value.replace(/\D/g, '');
+      if (!valor) {
+        input.value = '';
+        return;
+      }
+      var numero = (parseFloat(valor) / 100).toFixed(2);
+      var partes = numero.split('.');
+      partes[0] = partes[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      input.value = partes.join(',');
+    }
+
+    function converterMoedaParaNumero(valorTexto) {
+      if (!valorTexto) return 0;
+      var limpo = valorTexto.toString().replace(/\./g, '').replace(',', '.').replace(/[^0-9.-]+/g, '');
+      return parseFloat(limpo) || 0;
+    }
+
+    function formatarReal(val) {
+      return 'R$ ' + Math.round(val).toLocaleString('pt-BR');
     }
 
     function copiarTextoSeguro(texto, mensagemSucesso) {
@@ -373,40 +427,29 @@
         document.execCommand('copy');
         mostrarToast(mensagemSucesso || 'Copiado com sucesso!');
       } catch (err) {
-        mostrarToast('Selecione e copie o texto manualmente.');
+        mostrarToast('Selecione e copie manualmente.');
       }
       document.body.removeChild(ta);
     }
 
-    function formatarReal(val) {
-      return 'R$ ' + Math.round(val).toLocaleString('pt-BR');
-    }
-
-    /* Navegação das Abas */
     function irParaAba(idAba) {
       var abas = ['calculator', 'agenda', 'vitrine', 'planos'];
       for (var i = 0; i < abas.length; i++) {
         var el = document.getElementById('tab-' + abas[i]);
         var navBtn = document.getElementById('nav-' + abas[i]);
         if (el) {
-          if (abas[i] === idAba) {
-            el.className = el.className.replace('hidden', '').trim();
-          } else if (el.className.indexOf('hidden') === -1) {
-            el.className += ' hidden';
-          }
+          if (abas[i] === idAba) el.className = el.className.replace('hidden', '').trim();
+          else if (el.className.indexOf('hidden') === -1) el.className += ' hidden';
         }
         if (navBtn) {
-          if (abas[i] === idAba) {
-            navBtn.className = 'nav-btn active';
-          } else {
-            navBtn.className = 'nav-btn';
-          }
+          if (abas[i] === idAba) navBtn.className = 'nav-btn active';
+          else navBtn.className = 'nav-btn';
         }
       }
       window.scrollTo(0, 0);
     }
 
-    /* ABA 1: Calculadora */
+    /* ABA 1: CALCULADORA ASSERTIVA */
     function calcularFinanciamento(comAviso) {
       var imovelEl = document.getElementById('calc-imovel');
       var rendaEl = document.getElementById('calc-income');
@@ -414,11 +457,9 @@
       var idadeEl = document.getElementById('calc-age');
       var statusEl = document.getElementById('res-status');
 
-      if (!imovelEl || !rendaEl) return;
-
-      var valorImovel = parseFloat(imovelEl.value) || 0;
-      var renda = parseFloat(rendaEl.value) || 0;
-      var fgts = parseFloat(fgtsEl.value) || 0;
+      var valorImovel = converterMoedaParaNumero(imovelEl.value);
+      var renda = converterMoedaParaNumero(rendaEl.value);
+      var fgts = converterMoedaParaNumero(fgtsEl.value);
       var idade = parseFloat(idadeEl.value) || 30;
 
       if (renda <= 0 || valorImovel <= 0) {
@@ -426,43 +467,47 @@
         return;
       }
 
+      // Regra de idade da Caixa: Idade + Prazo <= 80,5 anos
       var anosLivres = Math.max(0, 80.5 - idade);
       var prazoMeses = Math.min(420, Math.max(12, Math.floor(anosLivres * 12)));
       var prazoAnos = (prazoMeses / 12).toFixed(1);
 
       document.getElementById('res-prazo').innerText = prazoMeses + ' meses (' + prazoAnos + ' anos)';
 
-      var jurosAnual = 8.5;
+      // Juros anuais de mercado: MCMV até 8k, SBPE para alta renda
+      var jurosAnual = 10.5; // Padrão SBPE
       if (renda <= 2640) jurosAnual = 4.5;
       else if (renda <= 4400) jurosAnual = 5.5;
       else if (renda <= 8000) jurosAnual = 7.66;
-      else jurosAnual = 9.99;
+      else jurosAnual = 10.49;
 
-      var margem30 = renda * 0.30;
-      var taxaMensal = Math.pow(1 + (jurosAnual / 100), 1/12) - 1;
-      var financPelaRenda = 0;
-      if (taxaMensal > 0 && prazoMeses > 0) {
-        financPelaRenda = margem30 * (1 - Math.pow(1 + taxaMensal, -prazoMeses)) / taxaMensal;
-      }
-
+      var margemMaxCaixa = renda * 0.30;
+      
+      // Amortização SAC: Amortização + Juros da 1ª parcela
       var teto80 = valorImovel * 0.80;
+      var taxaMensal = Math.pow(1 + (jurosAnual / 100), 1/12) - 1;
+      
+      // Financiamento máximo suportado pela renda na tabela SAC
+      var amortizacaoMax = margemMaxCaixa / (1 + (taxaMensal * prazoMeses));
+      var financPelaRenda = (margemMaxCaixa / ((1 / prazoMeses) + taxaMensal));
+      
       var financAprovado = Math.min(financPelaRenda, teto80);
+      var primeiraParcelaSAC = (financAprovado / prazoMeses) + (financAprovado * taxaMensal);
       var entradaNecessaria = Math.max(0, valorImovel - financAprovado - fgts);
-      var poderTotal = financPelaRenda + fgts;
 
       if (financAprovado < teto80) {
-        statusEl.innerHTML = '<span style="color:#fbbf24;">⚠️ Renda aprova até ' + formatarReal(financAprovado) + '. Entrada requerida: ' + formatarReal(entradaNecessaria) + '.</span>';
+        statusEl.innerHTML = '<span style="color:#fbbf24;">⚠️ Pela renda, a Caixa aprova até ' + formatarReal(financAprovado) + '. A entrada precisará ser de ' + formatarReal(entradaNecessaria) + '.</span>';
       } else {
-        statusEl.innerHTML = '<span style="color:#34d399;">✔ Renda aprova o limite máximo de 80% (' + formatarReal(financAprovado) + ').</span>';
+        statusEl.innerHTML = '<span style="color:#34d399;">✔ Renda de alta capacidade: aprova o teto máximo de 80% do imóvel (' + formatarReal(financAprovado) + ').</span>';
       }
 
       document.getElementById('res-financiamento').innerText = formatarReal(financAprovado);
-      document.getElementById('res-parcela').innerText = formatarReal(margem30 * 0.94) + ' /mês';
+      document.getElementById('res-parcela').innerText = formatarReal(primeiraParcelaSAC) + ' /mês';
       document.getElementById('res-entrada').innerText = formatarReal(entradaNecessaria);
       document.getElementById('res-fgts').innerText = formatarReal(fgts);
-      document.getElementById('res-poder').innerText = formatarReal(poderTotal);
+      document.getElementById('res-margem').innerText = formatarReal(margemMaxCaixa);
 
-      if (comAviso) mostrarToast('Estudo financeiro atualizado!');
+      if (comAviso) mostrarToast('Estudo financeiro atualizado com sucesso!');
     }
 
     function copiarResumoWhatsApp() {
@@ -474,24 +519,24 @@
       var entrada = document.getElementById('res-entrada').innerText;
       var fgts = document.getElementById('res-fgts').innerText;
 
-      var texto = 'Olá! Montei um estudo de financiamento exclusivo para o seu perfil:\n\n' +
-                  '🏢 *Imóvel pretendido:* R$ ' + Number(valorImovel).toLocaleString('pt-BR') + '\n' +
-                  '💼 *Renda familiar base:* R$ ' + Number(renda).toLocaleString('pt-BR') + '\n' +
+      var texto = 'Olá! Montei um estudo bancário de viabilidade para o seu perfil:\n\n' +
+                  '🏢 *Imóvel pretendido:* R$ ' + valorImovel + '\n' +
+                  '💼 *Renda familiar declarada:* R$ ' + renda + '\n' +
                   '📅 *Prazo máximo calculado:* ' + prazo + '\n' +
-                  '🏦 *Financiamento Caixa estimado:* até ' + financ + '\n' +
-                  '📉 *Parcela mensal estimada:* ' + parc + '\n' +
+                  '🏦 *Financiamento estimado:* até ' + financ + '\n' +
+                  '📉 *1ª Parcela estimada (SAC):* ' + parc + '\n' +
                   '💰 *FGTS considerado:* ' + fgts + '\n' +
                   '🔑 *Entrada restante necessária:* ' + entrada + '\n\n' +
-                  'Podemos agendar para rodar sua aprovação formal nesta semana?';
+                  'Conseguimos rodar sua aprovação formal nesta semana?';
 
       copiarTextoSeguro(texto, 'Resumo copiado para o WhatsApp!');
     }
 
-    /* ABA 2: Antissumiço */
+    /* ABA 2: ANTISSUMIÇO */
     function verificarCamposAgenda() {
       var tipo = document.getElementById('meeting-type').value;
       var linha = document.getElementById('agenda-date-time-row');
-      if (tipo === 'sumiu_simulacao' || tipo === 'documentos' || tipo === 'revisita' || tipo === 'parcela_alta' || tipo === 'medo_divida') {
+      if (['sumiu_simulacao', 'documentos', 'revisita', 'parcela_alta', 'medo_divida'].includes(tipo)) {
         linha.className = 'form-row hidden';
       } else {
         linha.className = 'form-row';
@@ -516,28 +561,28 @@
       var msg = '';
       if (type === 'visita') {
         badge.innerText = 'Compromisso & Portaria';
-        msg = 'Olá ' + name + ', tudo bem?\n\nJá reservei a minha agenda para receber você no dia ' + dateFormatted + ' às ' + time + '.\n\nComo o acesso ao empreendimento exige envio prévio dos nomes na portaria e bloqueei 40 minutos exclusivos para o seu atendimento, peço a gentileza de me confirmar se está tudo mantido por aí. Caso surja algum imprevisto, me avise até 2 horas antes para eu remanejar a escala.\n\nNos vemos às ' + time + '!';
+        msg = 'Olá ' + name + ', tudo bem?\n\nJá reservei a minha agenda para receber você no dia ' + dateFormatted + ' às ' + time + '.\n\nComo o acesso ao empreendimento exige envio prévio dos nomes na portaria e bloqueei 40 minutos exclusivos para o seu atendimento, peço a gentileza de me confirmar se está tudo mantido por aí. Caso surja algum imprevisto, me avise com 2 horas de antecedência.\n\nNos vemos às ' + time + '!';
       } else if (type === 'duas_horas') {
         badge.innerText = 'Filtro Anti-Gasolina';
-        msg = 'Fala ' + name + '! Passando rápido para confirmar nosso encontro hoje às ' + time + '.\n\nEstou organizando a rota de visitas da tarde e separando o material do imóvel. Você conseguiu manter o horário certinho ou já está a caminho?';
+        msg = 'Fala ' + name + '! Passando rápido para confirmar nosso encontro hoje às ' + time + '.\n\nEstou organizando a rota da tarde e separando a chave/pasta do imóvel. Você conseguiu manter o horário certinho ou já está a caminho?';
       } else if (type === 'sumiu_simulacao') {
         badge.innerText = 'Descarte Suave';
-        msg = 'Oi ' + name + ', tudo bem?\n\nComo não tive mais seu retorno sobre os números que montei, imaginei que você tenha decidido pausar a busca pelo imóvel por enquanto ou que as condições não encaixaram no seu momento.\n\nSem problema nenhum! Posso arquivar sua ficha por aqui para não ficar te incomodando, ou você ainda gostaria de avaliar alguma opção com entrada mais suave?';
+        msg = 'Oi ' + name + ', tudo bem?\n\nComo não tive mais seu retorno sobre os números que montei, imaginei que você tenha decidido pausar a busca ou que as condições não encaixaram.\n\nSem problema nenhum! Posso arquivar sua pasta por aqui para não incomodar, ou você ainda gostaria de avaliar alguma opção com entrada mais suave?';
       } else if (type === 'documentos') {
         badge.innerText = 'Urgência Bancária';
-        msg = 'Olá ' + name + ', tudo certo?\n\nEstou com o sistema da Caixa aberto finalizando a remessa de processos desta semana. Para garantir que seu processo entre com as taxas e condições seguradas, preciso apenas daqueles últimos documentos pendentes.\n\nConsegue me mandar foto nítida por aqui hoje para não perdermos a vaga do correspondente?';
+        msg = 'Olá ' + name + ', tudo certo?\n\nEstou com o sistema da Caixa aberto finalizando a remessa desta semana. Para garantir que seu processo entre com as taxas seguradas, preciso apenas daqueles últimos documentos pendentes.\n\nConsegue me mandar foto nítida por aqui hoje para não perdermos a vaga?';
       } else if (type === 'assinatura') {
         badge.innerText = 'Autoridade Presencial';
-        msg = 'Olá ' + name + '! Excelente notícia: sua pasta de crédito foi concluída e está pronta para assinatura no dia ' + dateFormatted + ' às ' + time + '.\n\nA mesa do correspondente bancário já está agendada exclusivamente para o seu contrato. Não esqueça de levar seu documento original com foto e os comprovantes físicos atualizados.\n\nConto com a sua pontualidade para não atrasar a validação bancária!';
+        msg = 'Olá ' + name + '! Sua pasta foi deferida e está pronta para assinatura no dia ' + dateFormatted + ' às ' + time + '.\n\nA mesa do correspondente bancário já está agendada exclusivamente para o seu contrato. Não esqueça de levar documento original com foto e comprovantes atualizados.\n\nConto com a sua presença pontual!';
       } else if (type === 'revisita') {
         badge.innerText = 'Oportunidade Reversa';
-        msg = 'Fala ' + name + ', lembrei de você hoje!\n\nAbriu uma oportunidade pontual com uma condição de entrada bem mais facilitada (exatamente no perfil que você estava procurando há um tempo atrás).\n\nVocê ainda está no plano de sair do aluguel ou já resolveu essa parte?';
+        msg = 'Fala ' + name + ', lembrei de você hoje!\n\nEntrou uma oportunidade pontual com valor de entrada bem facilitado (dentro do perfil que você procurava).\n\nVocê ainda está avaliando comprar ou já resolveu essa parte?';
       } else if (type === 'parcela_alta') {
-        badge.innerText = 'Solução de Composição';
-        msg = 'Oi ' + name + '! Pensando naqueles valores que conversamos: se a parcela inicial ficou no limite do orçamento, a gente tem a opção de fazer uma composição de renda (juntando com familiar de primeiro grau, cônjuge ou noivo(a)).\n\nIsso aumenta a capacidade de aprovação e dilui a parcela. Tem alguém que toparia compor com você para deixar o valor bem leve?';
+        badge.innerText = 'Composição de Renda';
+        msg = 'Oi ' + name + '! Se a primeira parcela ficou no limite do planejado, podemos incluir uma composição de renda com um segundo comprador (familiar, noivo(a) ou cônjuge).\n\nIsso estica a margem e reduz o valor da parcela. Tem alguém que toparia compor com você?';
       } else {
         badge.innerText = 'Custo da Inação';
-        msg = 'Fala ' + name + ', compreendo totalmente o receio de assumir um compromisso de longo prazo, é normal na compra do primeiro imóvel.\n\nMas pensa comigo: a parcela do financiamento amortiza uma dívida que vira patrimônio seu e congela, enquanto o aluguel sobe todo ano e no fim de 5 anos você pagou R$ 90 mil sem ter nada no seu nome.\n\nVale a pena vermos uma condição onde a parcela fique rigorosamente igual ao que você já pagaria de aluguel?';
+        msg = 'Fala ' + name + ', é natural ter receio de assumir financiamento de longo prazo. Mas pensa comigo: a parcela financiada amortiza um patrimônio seu que valoriza, enquanto o aluguel é dinheiro sem retorno.\n\nPodemos ver uma opção onde a parcela fique no mesmo valor do seu aluguel?';
       }
 
       document.getElementById('script-text').innerText = msg;
@@ -549,17 +594,74 @@
       copiarTextoSeguro(text, 'Script copiado!');
     }
 
-    /* ABA 3: Vitrine */
-    function carregarFotoVitrine(input) {
-      if (input.files && input.files[0]) {
-        var reader = new FileReader();
-        reader.onload = function(e) {
-          var imgBox = document.getElementById('prev-img');
-          imgBox.style.backgroundImage = 'url(' + e.target.result + ')';
-          document.getElementById('prev-photo-placeholder').style.display = 'none';
-          mostrarToast('Foto do imóvel carregada!');
-        };
-        reader.readAsDataURL(input.files[0]);
+    /* ABA 3: VITRINE MULTI-FOTOS E EXPORTAÇÃO */
+    function carregarMultiplasFotos(input) {
+      if (input.files && input.files.length > 0) {
+        fotosGaleria = [];
+        var total = input.files.length;
+        var carregadas = 0;
+
+        for (var i = 0; i < total; i++) {
+          (function(file) {
+            var reader = new FileReader();
+            reader.onload = function(e) {
+              fotosGaleria.push(e.target.result);
+              carregadas++;
+              if (carregadas === total) {
+                fotoIndexAtual = 0;
+                exibirFotoGaleria(0);
+                montarPontosGaleria();
+                mostrarToast(total + ' foto(s) carregada(s)!');
+              }
+            };
+            reader.readAsDataURL(file);
+          })(input.files[i]);
+        }
+      }
+    }
+
+    function exibirFotoGaleria(idx) {
+      if (fotosGaleria.length === 0) return;
+      var img = document.getElementById('main-preview-img');
+      var placeholder = document.getElementById('prev-photo-placeholder');
+      var counter = document.getElementById('photo-counter');
+
+      img.src = fotosGaleria[idx];
+      img.style.display = 'block';
+      placeholder.style.display = 'none';
+
+      if (fotosGaleria.length > 1) {
+        counter.style.display = 'block';
+        counter.innerText = (idx + 1) + ' / ' + fotosGaleria.length;
+      } else {
+        counter.style.display = 'none';
+      }
+
+      var dots = document.querySelectorAll('.gallery-dots .dot');
+      dots.forEach(function(d, i) {
+        if (i === idx) d.className = 'dot active';
+        else d.className = 'dot';
+      });
+    }
+
+    function montarPontosGaleria() {
+      var bar = document.getElementById('gallery-dots-bar');
+      bar.innerHTML = '';
+      if (fotosGaleria.length <= 1) {
+        bar.style.display = 'none';
+        return;
+      }
+      bar.style.display = 'flex';
+      for (var i = 0; i < fotosGaleria.length; i++) {
+        (function(index) {
+          var dot = document.createElement('div');
+          dot.className = index === 0 ? 'dot active' : 'dot';
+          dot.onclick = function() {
+            fotoIndexAtual = index;
+            exibirFotoGaleria(index);
+          };
+          bar.appendChild(dot);
+        })(i);
       }
     }
 
@@ -567,11 +669,15 @@
       var title = document.getElementById('prop-title').value;
       var price = document.getElementById('prop-price').value;
       var loc = document.getElementById('prop-location').value;
+      var agent = document.getElementById('prop-agent').value;
+      var phone = document.getElementById('prop-phone').value;
       var feats = document.getElementById('prop-features').value.split(',');
 
       document.getElementById('prev-title').innerText = title;
-      document.getElementById('prev-price').innerText = price;
+      document.getElementById('prev-price').innerText = 'R$ ' + price.replace('R$', '').trim();
       document.getElementById('prev-location').innerText = '📍 ' + loc;
+      document.getElementById('prev-agent').innerHTML = 'Atendimento: <strong>' + agent + '</strong>';
+      document.getElementById('prev-phone').innerHTML = '📞 <strong>' + phone + '</strong>';
 
       var container = document.getElementById('prev-badges');
       container.innerHTML = '';
@@ -586,10 +692,31 @@
       mostrarToast('Vitrine atualizada!');
     }
 
+    function baixarCardComoImagem() {
+      var cardArea = document.getElementById('card-export-area');
+      mostrarToast('Gerando imagem em alta resolução...');
+
+      html2canvas(cardArea, {
+        scale: 2,
+        backgroundColor: '#0f172a',
+        useCORS: true
+      }).then(function(canvas) {
+        var link = document.createElement('a');
+        link.download = 'card-imovel-' + Date.now() + '.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        mostrarToast('Card baixado com sucesso!');
+      }).catch(function() {
+        mostrarToast('Erro ao exportar. Tire um print da tela.');
+      });
+    }
+
     function copiarTextoVitrine() {
       var title = document.getElementById('prev-title').innerText;
       var price = document.getElementById('prev-price').innerText;
       var loc = document.getElementById('prev-location').innerText;
+      var agent = document.getElementById('prop-agent').value;
+      var phone = document.getElementById('prop-phone').value;
       var badges = document.querySelectorAll('#prev-badges .tag-item');
       var listaBadges = [];
       for (var i = 0; i < badges.length; i++) {
@@ -600,7 +727,9 @@
                   '💰 Valor: ' + price + '\n' +
                   loc + '\n\n' +
                   '*Destaques do Imóvel:*\n' + listaBadges.join('\n') + '\n\n' +
-                  'Deseja simular o valor de entrada e as parcelas para o seu perfil? Me responda aqui!';
+                  '👤 *Corretor Responsável:* ' + agent + '\n' +
+                  '📲 *Contato direto:* ' + phone + '\n\n' +
+                  'Deseja receber a simulação de entrada e parcelas deste imóvel? Me chame aqui!';
 
       copiarTextoSeguro(texto, 'Texto do imóvel copiado!');
     }
@@ -609,9 +738,9 @@
       mostrarToast('A redirecionar para o checkout do plano ' + plano + '...');
     }
 
-    /* Arrancar logo no início */
     window.onload = function() {
       calcularFinanciamento(false);
+      atualizarVitrineCard();
     };
   </script>
 </body>
