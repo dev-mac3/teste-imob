@@ -97,7 +97,7 @@
     .result-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
     .result-item { background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px; }
     .result-item span { font-size: 10px; color: var(--text-muted); display: block; margin-bottom: 4px; }
-    .result-item strong { font-size: 15px; font-weight: 700; color: var(--text-main); }
+    .result-item strong { font-size: 14px; font-weight: 700; color: var(--text-main); }
     .result-item strong.highlight { color: var(--primary-color); }
     .disclaimer { font-size: 10px; color: var(--text-muted); line-height: 1.4; margin-top: 12px; }
 
@@ -158,7 +158,6 @@
     #ia-copilot-trigger { position: fixed; right: 16px; bottom: 82px; background: var(--copilot-bg); color: #ffffff; font-size: 12px; font-weight: 800; padding: 10px 14px; border-radius: 30px; display: flex; align-items: center; gap: 6px; box-shadow: 0 8px 20px rgba(0,0,0,0.3); z-index: 9999; cursor: pointer; border: none; user-select: none; }
     #ia-copilot-modal { display: none; position: fixed; right: 12px; bottom: 80px; width: calc(100% - 24px); max-width: 420px; height: 510px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 18px; z-index: 10000; flex-direction: column; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.85); }
     .ia-header { background: var(--bg-input); padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); }
-    .ia-header-left { display: flex; align-items: center; gap: 8px; }
     .ia-header strong { font-size: 13px; color: var(--primary-color); }
     .ia-close { background: none; border: none; color: var(--text-muted); font-size: 16px; cursor: pointer; }
     
@@ -265,11 +264,19 @@
             <strong id="res-parcela">—</strong>
           </div>
           <div class="result-item">
+            <span>Taxa de Juros Nominal</span>
+            <strong id="res-taxa" class="highlight">—</strong>
+          </div>
+          <div class="result-item">
+            <span>Capacidade pela Renda</span>
+            <strong id="res-capacidade">—</strong>
+          </div>
+          <div class="result-item">
             <span id="label-financiamento">Financiamento Aprovado</span>
             <strong id="res-financiamento">—</strong>
           </div>
           <div class="result-item">
-            <span>Entrada em Recursos</span>
+            <span>Entrada</span>
             <strong id="res-entrada" class="highlight">—</strong>
           </div>
           <div class="result-item">
@@ -282,7 +289,7 @@
           </div>
         </div>
         <button type="button" onclick="copiarResumoWhatsApp()" class="btn-action btn-secondary">Copiar Resumo p/ WhatsApp</button>
-        <p class="disclaimer">Cálculo alinhado à tabela oficial da Caixa (taxas cotistas S/SE/CO e limites de cota por modalidade)[cite: 6].</p>
+        <p class="disclaimer">Cálculo alinhado à tabela oficial da Caixa (taxas cotistas S/SE/CO e limites de cota por modalidade).</p>
       </div>
     </section>
 
@@ -563,7 +570,7 @@
       <div class="ia-msg bot">
         Olá! Sou seu assistente no ImobFlow.
 
-        Posso ajudar com regras de crédito da Caixa (cotas, tetos e taxas)[cite: 6], como usar cada recurso do app ou técnicas para destravar negociações com clientes. O que você precisa no momento?
+        Posso ajudar com regras de crédito da Caixa (cotas, tetos e taxas), como usar cada recurso do app ou técnicas para destravar negociações com clientes. O que você precisa no momento?
       </div>
     </div>
     <span id="ia-typing" class="ia-typing-indicator">Copiloto digitando...</span>
@@ -835,6 +842,7 @@
       calcularFinanciamento(false);
     }
 
+    /* MOTOR DE CÁLCULO ATUALIZADO (TAXAS + CAPACIDADE PELA RENDA + ENTRADA) */
     function calcularFinanciamento(comAviso) {
       var imovelEl = document.getElementById('calc-imovel');
       var rendaEl = document.getElementById('calc-income');
@@ -850,6 +858,8 @@
       if (renda <= 0 || valorImovel <= 0) {
         statusEl.innerText = 'Preencha o valor do imóvel e a renda para simular.';
         document.getElementById('res-prazo').innerText = '—';
+        document.getElementById('res-taxa').innerText = '—';
+        document.getElementById('res-capacidade').innerText = '—';
         document.getElementById('res-financiamento').innerText = '—';
         document.getElementById('res-parcela').innerText = '—';
         document.getElementById('res-entrada').innerText = '—';
@@ -953,13 +963,15 @@
       var cotaPct = Math.round(cotaMaxima * 100);
 
       document.getElementById('label-financiamento').innerText = 'Financiamento (até ' + cotaPct + '%)';
+      document.getElementById('res-taxa').innerText = jurosAnual.toFixed(2).replace('.', ',') + '% a.a.';
+      document.getElementById('res-capacidade').innerText = formatarReal(financPelaRenda);
 
       var descTipo = (tipoImovelAtual === 'planta' ? 'Planta' : (tipoImovelAtual === 'novo' ? 'Novo' : 'Usado'));
 
       if (financAprovado < tetoFinanceiro) {
         statusEl.innerHTML = '<span style="color:#fbbf24;">⚠️ Pela renda em ' + descTipo + ' (' + amortizacaoAtual.toUpperCase() + '), aprova até ' + formatarReal(financAprovado) + '. Entrada requerida: ' + formatarReal(entradaNecessaria) + '.' + avisoLimite + '</span>';
       } else {
-        statusEl.innerHTML = '<span style="color:var(--primary-color);">✔ Renda aprova a cota máxima de ' + cotaPct + '% para imóvel ' + descTipo + ' (' + formatarReal(financAprovado) + '). Taxa: ' + jurosAnual + '% a.a.' + avisoLimite + '</span>';
+        statusEl.innerHTML = '<span style="color:var(--primary-color);">✔ Renda aprova a cota máxima de ' + cotaPct + '% para imóvel ' + descTipo + ' (' + formatarReal(financAprovado) + '). Taxa: ' + jurosAnual.toFixed(2).replace('.', ',') + '% a.a.' + avisoLimite + '</span>';
       }
 
       document.getElementById('res-financiamento').innerText = formatarReal(financAprovado);
@@ -975,6 +987,8 @@
       var valorImovel = document.getElementById('calc-imovel').value;
       var renda = document.getElementById('calc-income').value;
       var prazo = document.getElementById('res-prazo').innerText;
+      var taxa = document.getElementById('res-taxa').innerText;
+      var capacidade = document.getElementById('res-capacidade').innerText;
       var financ = document.getElementById('res-financiamento').innerText;
       var parc = document.getElementById('res-parcela').innerText;
       var entrada = document.getElementById('res-entrada').innerText;
@@ -993,11 +1007,13 @@
                   '🏢 *Imóvel pretendido:* R$ ' + valorImovel + ' (' + descTipo + ')\n' +
                   '💼 *Renda familiar declarada:* R$ ' + renda + '\n' +
                   '📌 *Linha:* ' + tipoLinha + ' (Tabela ' + amortizacaoAtual.toUpperCase() + ')\n' +
+                  '📈 *Taxa de juros:* ' + taxa + '\n' +
                   '📅 *Prazo máximo calculado:* ' + prazo + '\n' +
+                  '📊 *Capacidade pela renda:* até ' + capacidade + '\n' +
                   '🏦 *Financiamento estimado:* até ' + financ + '\n' +
                   '📉 *Parcela estimada:* ' + parc + '\n' +
                   '💰 *FGTS considerado:* ' + fgts + '\n' +
-                  '🔑 *Entrada restante necessária:* ' + entrada + '\n\n' +
+                  '🔑 *Entrada:* ' + entrada + '\n\n' +
                   'Podemos agendar para rodar sua aprovação formal nesta semana?';
 
       copiarTextoSeguro(texto, 'Resumo copiado para o WhatsApp!');
@@ -1536,7 +1552,7 @@
       if (apiKey) {
         try {
           var systemPrompt = 'Você é o Copiloto ImobFlow, um consultor imobiliário de elite e correspondente bancário sênior da Caixa Econômica Federal. ' +
-                             'Seu tom é seguro, profissional, acolhedor e altamente técnico, sem usar gírias masculinizadas como irmão ou parceiro, tratando o interlocutor de forma neutra. ' +
+                             'Seu tom é seguro, profissional, acolhedor e altamente técnico, tratando o interlocutor de forma neutra. ' +
                              'Você domina: regras Caixa 2026 (MCMV faixas 1 a 3 com tetos de 275k e 400k; Faixa 4 até 600k com 10% a.a.; Pró-cotista até 500k com 8.66% a.a.; SBPE até 2.25M com 10.92% a.a.), ' +
                              'cotas de novos/planta (até 90% SAC no MCMV 1 e 2; 80% nos demais) e usados (80% MCMV; 60% S/SE na faixa 4 e pró-cotista; 80% SAC e 70% Price no SBPE), ' +
                              'regra de idade (idade + prazo <= 80,5 anos), SAC vs PRICE, e as funções do app ImobFlow (Vitrine com link público ?v= e PDF multi-páginas, Qualificador e Scripts Antissumiço). ' +
