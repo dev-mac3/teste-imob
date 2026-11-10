@@ -316,7 +316,7 @@
         <div class="form-row">
           <div class="form-group">
             <label>Seu Nome / Imobiliária</label>
-            <input type="text" id="prop-agent" placeholder="Ex: Gabriel Macena" oninput="atualizarVitrineCard()">
+            <input type="text" id="prop-agent" placeholder="Ex: Seu Nome ou Empresa" oninput="atualizarVitrineCard()">
           </div>
           <div class="form-group">
             <label>Seu WhatsApp (com DDD)</label>
@@ -411,14 +411,14 @@
   <button id="ia-copilot-trigger" onclick="alternarCopilotoIA()">🤖 Copiloto IA</button>
   <div id="ia-copilot-modal">
     <div class="ia-header">
-      <strong>⚡ Copiloto do Corretor (Caixa & App)</strong>
+      <strong>⚡ Copiloto ImobFlow</strong>
       <button class="ia-close" onclick="alternarCopilotoIA()">✕</button>
     </div>
     <div class="ia-body" id="ia-chat-messages">
       <div class="ia-msg bot">
-        Fala, parceiro! Beleza? Sou seu Copiloto aqui no ImobFlow.
+        Olá! Sou seu assistente no ImobFlow.
         
-        Tô pronto pra tirar qualquer dúvida da Caixa (cotas, tetos e taxas)[cite: 6], te ajudar com clientes sumidos ou te guiar em qualquer ferramenta do app. Como posso somar no seu plantão agora?
+        Posso ajudar com regras de crédito da Caixa (cotas, tetos e taxas)[cite: 6], como usar cada recurso do app ou técnicas para destravar negociações com clientes. O que você precisa no momento?
       </div>
     </div>
     <div class="ia-quick-topics">
@@ -426,13 +426,13 @@
       <span class="ia-chip" onclick="executarTopicoIA('cotas_usado')">Cotas Usado</span>
       <span class="ia-chip" onclick="executarTopicoIA('tetos_renda')">Tetos de Renda</span>
       <span class="ia-chip" onclick="executarTopicoIA('regra_idade')">Regra Idade</span>
+      <span class="ia-chip" onclick="executarTopicoIA('cliente_sumiu')">Destravar Cliente</span>
       <span class="ia-chip" onclick="executarTopicoIA('link_vitrine')">Link Vitrine</span>
       <span class="ia-chip" onclick="executarTopicoIA('exportar_pdf')">Exportar PDF</span>
       <span class="ia-chip" onclick="executarTopicoIA('sac_price')">SAC vs PRICE</span>
-      <span class="ia-chip" onclick="executarTopicoIA('cliente_sumiu')">Cliente Sumiu</span>
     </div>
     <div class="ia-input-row">
-      <input type="text" id="ia-user-input" placeholder="Fala comigo sobre o app ou a Caixa..." onkeypress="if(event.key==='Enter') enviarMensagemCopiloto()">
+      <input type="text" id="ia-user-input" placeholder="Digite sua pergunta..." onkeypress="if(event.key==='Enter') enviarMensagemCopiloto()">
       <button onclick="enviarMensagemCopiloto()">Enviar</button>
     </div>
   </div>
@@ -782,25 +782,25 @@
         msg = 'Olá ' + name + ', tudo bem?\n\nJá reservei a minha agenda para receber você no dia ' + dateFormatted + ' às ' + time + '.\n\nComo o acesso ao empreendimento exige envio prévio dos nomes na portaria e bloqueei 40 minutos exclusivos para o seu atendimento, peço a gentileza de me confirmar se está tudo mantido por aí. Caso surja algum imprevisto, me avise com 2 horas de antecedência.\n\nNos vemos às ' + time + '!';
       } else if (type === 'duas_horas') {
         badge.innerText = 'Filtro Anti-Gasolina';
-        msg = 'Fala ' + name + '! Passando rápido para confirmar nosso encontro hoje às ' + time + '.\n\nEstou organizando a rota da tarde e separando a chave/pasta do imóvel. Você conseguiu manter o horário certinho ou já está a caminho?';
+        msg = 'Olá ' + name + '! Passando rápido para confirmar nosso encontro hoje às ' + time + '.\n\nEstou organizando a rota da tarde e separando a chave e pasta do imóvel. Você conseguiu manter o horário ou já está a caminho?';
       } else if (type === 'sumiu_simulacao') {
         badge.innerText = 'Descarte Suave';
-        msg = 'Oi ' + name + ', tudo bem?\n\nComo não tive mais seu retorno sobre os números que montei, imaginei que você tenha decidido pausar a busca ou que as condições não encaixaram.\n\nSem problema nenhum! Posso arquivar sua pasta por aqui para não incomodar, ou você ainda gostaria de avaliar alguma opção com entrada mais suave?';
+        msg = 'Olá ' + name + ', tudo bem?\n\nComo não tive mais seu retorno sobre os números que montei, imaginei que você tenha decidido pausar a busca ou que as condições não encaixaram no seu orçamento.\n\nSem problema nenhum! Posso arquivar sua pasta por aqui para não incomodar, ou você ainda gostaria de avaliar alguma opção com entrada facilitada?';
       } else if (type === 'documentos') {
         badge.innerText = 'Urgência Bancária';
-        msg = 'Olá ' + name + ', tudo certo?\n\nEstou com o sistema da Caixa aberto finalizando a remessa desta semana. Para garantir que seu processo entre com as taxas seguradas, preciso apenas daqueles últimos documentos pendentes.\n\nConsegue me mandar foto nítida por aqui hoje para não perdermos a vaga?';
+        msg = 'Olá ' + name + ', tudo certo?\n\nEstou com o sistema da Caixa aberto finalizando a remessa desta semana. Para garantir que seu processo entre com as taxas seguradas, preciso apenas daqueles últimos documentos pendentes.\n\nConsegue me mandar foto nítida por aqui hoje para não perdermos a vaga do lote?';
       } else if (type === 'assinatura') {
         badge.innerText = 'Autoridade Presencial';
         msg = 'Olá ' + name + '! Sua pasta foi deferida e está pronta para assinatura no dia ' + dateFormatted + ' às ' + time + '.\n\nA mesa do correspondente bancário já está agendada exclusivamente para o seu contrato. Não esqueça de levar documento original com foto e comprovantes atualizados.\n\nConto com a sua presença pontual!';
       } else if (type === 'revisita') {
         badge.innerText = 'Oportunidade Reversa';
-        msg = 'Fala ' + name + ', lembrei de você hoje!\n\nEntrou uma oportunidade pontual com valor de entrada bem facilitado (dentro do perfil que você procurava).\n\nVocê ainda está avaliando comprar ou já resolveu essa parte?';
+        msg = 'Olá ' + name + ', lembrei de você hoje!\n\nEntrou uma oportunidade pontual com valor de entrada bem facilitado (dentro do perfil que você procurava).\n\nVocê ainda está avaliando comprar ou já resolveu essa parte?';
       } else if (type === 'parcela_alta') {
         badge.innerText = 'Composição de Renda';
-        msg = 'Oi ' + name + '! Se a primeira parcela ficou no limite do planejado, podemos incluir uma composição de renda com um segundo comprador (familiar, noivo(a) ou cônjuge).\n\nIsso estica a margem e reduz o valor da parcela. Tem alguém que toparia compor com você?';
+        msg = 'Olá ' + name + '! Se a primeira parcela ficou no limite do planejado, podemos incluir uma composição de renda com um segundo comprador (familiar, noivo(a) ou cônjuge).\n\nIsso estica a margem e reduz o valor da parcela. Tem alguém que toparia compor com você?';
       } else {
         badge.innerText = 'Custo da Inação';
-        msg = 'Fala ' + name + ', é natural ter receio de assumir financiamento de longo prazo. Mas pensa comigo: a parcela financiada amortiza um patrimônio seu que valoriza, enquanto o aluguel é dinheiro sem retorno.\n\nPodemos ver uma opção onde a parcela fique no mesmo valor do seu aluguel?';
+        msg = 'Olá ' + name + ', é natural ter receio de assumir um compromisso de longo prazo. Mas pense comigo: a parcela financiada amortiza um patrimônio seu que valoriza, enquanto o aluguel é um custo sem retorno.\n\nPodemos ver uma opção onde a parcela fique no mesmo valor do seu aluguel atual?';
       }
 
       document.getElementById('script-text').innerText = msg;
@@ -1080,7 +1080,7 @@
     }
 
     /* =====================================================
-       COPILOTO IA: MOTOR DE RESPOSTAS ROBUSTO E HUMANIZADO
+       COPILOTO IA: MOTOR DE RESPOSTAS PROFISSIONAL E HUMANIZADO
        ===================================================== */
     function alternarCopilotoIA() {
       var modal = document.getElementById('ia-copilot-modal');
@@ -1100,7 +1100,6 @@
       chat.scrollTop = chat.scrollHeight;
     }
 
-    // BASE DE DADOS E RESPOSTAS COMPLETAS
     var respostasProntas = {
       regras_gerais: '📌 Resumo das Linhas da Caixa (2026):\n\n' +
                      '• MCMV: Renda familiar até R$ 9.600. Imóveis até R$ 275 mil (Fx 1 e 2) ou R$ 400 mil (Fx 3). Taxas de 4,25% a 7,66% a.a.\n' +
@@ -1141,29 +1140,30 @@
       link_vitrine: '📲 Como usar o Link Interativo da Vitrine:\n\n' +
                     '1. Vá na aba Vitrine, preencha os dados e escolha as fotos do imóvel.\n' +
                     '2. Clique em "🔗 Copiar Link Interativo para o Cliente".\n' +
-                    '3. Ao abrir esse link, o cliente vê uma tela linda de fotos com passe de dedo, sem nenhum botão seu de corretor, e com um botão direto pro seu WhatsApp!',
+                    '3. Ao abrir esse link, o cliente vê uma tela de fotos com passe de dedo, sem nenhum botão de corretor, e com um botão direto para o seu WhatsApp!',
 
       exportar_pdf: '📄 Como exportar a Apresentação em PDF:\n\n' +
                     'Clique no botão roxo "📄 Baixar Apresentação em PDF". O app monta um PDF de alta qualidade: a página 1 traz a foto principal e ficha técnica, e as páginas seguintes distribuem as demais fotos com seus contatos no rodapé.',
 
       exportar_png: '📥 Como baixar o Card em Imagem (PNG):\n\n' +
-                    'O botão azul "📥 Baixar Card em Imagem (PNG)" tira uma foto em alta definição do card atual e salva direto na sua galeria ou downloads, pronta para postar no Instagram, Stories ou Status do WhatsApp.',
+                    'O botão azul "📥 Baixar Card em Imagem (PNG)" renderiza uma foto em alta definição do card atual e salva direto na sua galeria ou downloads, pronta para postar no Instagram, Stories ou Status do WhatsApp.',
 
-      cliente_sumiu: '🛡️ O que fazer com cliente que sumiu:\n\n' +
-                     'Vá na aba "Antissumiço", selecione a opção "3. Lead Sumiu Após Simulação" e clique em gerar. O script usa o gatilho psicológico do "Descarte Suave" (perguntando se pode arquivar a pasta dele). A maioria responde na hora por medo de perder a oportunidade!'
+      cliente_sumiu: '🛡️ Como destravar cliente travado ou sumido:\n\n' +
+                     '1. Se o cliente sumiu após a simulação: Use o "Descarte Suave" (Aba Antissumiço, opção 3). Pergunte se pode arquivar a pasta dele. O medo de perder a reserva faz a maioria responder imediatamente.\n' +
+                     '2. Se travou no envio de documentos: Use a opção 4 da aba Antissumiço, criando senso de urgência bancária pelo lote semanal da Caixa.\n' +
+                     '3. Se travou por medo da parcela: Avalie a composição de renda com um coobrigado ou compare o valor da parcela com o aluguel futuro.'
     };
 
-    // AÇÃO DOS 8 CHIPS INFERIORES
     function executarTopicoIA(chave) {
       var rotulos = {
         regras_gerais: 'Regras da Caixa',
         cotas_usado: 'Cotas Usado',
         tetos_renda: 'Tetos de Renda',
         regra_idade: 'Regra de Idade',
+        cliente_sumiu: 'Como destravar cliente travado?',
         link_vitrine: 'Como funciona o Link da Vitrine?',
         exportar_pdf: 'Como funciona a Apresentação em PDF?',
-        sac_price: 'SAC vs PRICE',
-        cliente_sumiu: 'O que mandar para cliente que sumiu?'
+        sac_price: 'SAC vs PRICE'
       };
       var perguntaTexto = rotulos[chave] || 'Dúvida';
       adicionarMensagemChat('user', perguntaTexto);
@@ -1175,27 +1175,30 @@
       }, 200);
     }
 
-    // PROCESSAMENTO INTELIGENTE E HUMANIZADO DO INPUT DIGITADO
     function processarRespostaIA(pergunta) {
       var p = pergunta.toLowerCase().trim();
       var r = '';
 
-      // 1. SAUDAÇÕES HUMANIZADAS E CONVERSACIONAIS
-      if (['oi', 'ola', 'olá', 'eai', 'e aí', 'opa', 'fala', 'salve', 'bom dia', 'boa tarde', 'boa noite'].indexOf(p) !== -1 || p.indexOf('tudo bem') !== -1 || p.indexOf('como vai') !== -1 || p.indexOf('beleza') !== -1) {
+      // 1. SAUDAÇÕES HUMANIZADAS E EDUCADAS
+      if (['oi', 'ola', 'olá', 'eai', 'e aí', 'opa', 'fala', 'salve', 'bom dia', 'boa tarde', 'boa noite'].indexOf(p) !== -1 || p.indexOf('tudo bem') !== -1 || p.indexOf('como vai') !== -1 || p.indexOf('tudo bom') !== -1) {
         var saudacoes = [
-          'Fala, meu amigo! Tudo certo por aqui e por aí? Como estão as vendas hoje? Em que posso te dar uma força agora?',
-          'Opa, tudo em paz, irmão! Pronto pra te ajudar a fechar pasta. Tá precisando ver taxa, cota ou desenrolar cliente travado?',
-          'Olá, parceiro! Tudo excelente. Qual dúvida da Caixa ou do app a gente vai resolver agora?'
+          'Olá! Tudo bem por aqui, e com você? Como estão os atendimentos hoje? Em que posso ajudar na sua rotina de vendas?',
+          'Olá! Tudo ótimo. Como posso colaborar com suas simulações ou fechamentos de imóveis hoje?',
+          'Olá! Seja bem-vindo(a). Em que posso auxiliar você com as regras da Caixa ou com os recursos do ImobFlow?'
         ];
         r = saudacoes[Math.floor(Math.random() * saudacoes.length)];
       }
-      else if (p.indexOf('obrigado') !== -1 || p.indexOf('valeu') !== -1 || p.indexOf('tmj') !== -1 || p.indexOf('show') !== -1) {
-        r = 'Tamo junto demais, irmão! Precisando de qualquer cálculo de cota, prazo ou estratégia de fechamento, só chamar!';
+      else if (p.indexOf('obrigado') !== -1 || p.indexOf('obrigada') !== -1 || p.indexOf('valeu') !== -1 || p.indexOf('perfeito') !== -1 || p.indexOf('show') !== -1) {
+        r = 'Disponha sempre! Se precisar simular novas condições, consultar prazos ou exportar materiais, conte comigo.';
       }
       else if (p.indexOf('quem e voce') !== -1 || p.indexOf('quem é você') !== -1 || p.indexOf('seu nome') !== -1) {
-        r = 'Sou o Copiloto ImobFlow, sua inteligência de apoio para crédito imobiliário Caixa e fechamento de vendas. Tô aqui pra você não perder tempo com manual de banco!';
+        r = 'Sou o Copiloto ImobFlow, sua inteligência de apoio para crédito imobiliário Caixa, cálculo de capacidade financeira e fechamento de vendas.';
       }
-      // 2. COTAS (USADO, NOVO, PLANTA OU GERAL)
+      // 2. CLIENTE TRAVADO / SUMIDO / OBJEÇÕES (PRIORIDADE ALTA)
+      else if (p.indexOf('travado') !== -1 || p.indexOf('destravar') !== -1 || p.indexOf('desenrolar') !== -1 || p.indexOf('sumiu') !== -1 || p.indexOf('vácuo') !== -1 || p.indexOf('descarte') !== -1 || p.indexOf('bolo') !== -1 || p.indexOf('obje') !== -1) {
+        r = respostasProntas.cliente_sumiu;
+      }
+      // 3. COTAS (USADO, NOVO, PLANTA OU GERAL)
       else if (p.indexOf('usado') !== -1 && (p.indexOf('cota') !== -1 || p.indexOf('%') !== -1 || p.indexOf('quanto') !== -1 || p.indexOf('financia') !== -1)) {
         r = respostasProntas.cotas_usado;
       }
@@ -1215,11 +1218,11 @@
             '• Pró-Cotista: até 60%\n' +
             '• SBPE: até 80% no SAC ou 70% na PRICE.';
       }
-      // 3. TETOS E FAIXAS DE RENDA
+      // 4. TETOS E FAIXAS DE RENDA
       else if (p.indexOf('teto') !== -1 || p.indexOf('limite') !== -1 || p.indexOf('faixa') !== -1 || p.indexOf('renda') !== -1) {
         r = respostasProntas.tetos_renda;
       }
-      // 4. TAXAS DE JUROS
+      // 5. TAXAS DE JUROS
       else if (p.indexOf('taxa') !== -1 || p.indexOf('juros') !== -1) {
         r = '📌 Taxas de Juros Vigentes para Cotistas (S/SE/CO):\n\n' +
             '• MCMV Faixa 1 (até R$ 2.850): 4,25% a 4,50% a.a.\n' +
@@ -1229,35 +1232,34 @@
             '• Pró-Cotista (até R$ 500k): 8,66% a.a.\n' +
             '• SBPE (até R$ 2,25M): 10,92% a.a.';
       }
-      // 5. IDADE E PRAZO
-      else if (p.indexOf('idade') !== -1 || p.indexOf('prazo') !== -1 || p.indexOf('80') !== -1 || p.indexOf('meses') !== -1 || p.indexOf('tempo') !== -1) {
+      // 6. IDADE E PRAZO
+      else if (p.indexOf('idade') !== -1 || p.indexOf('prazo') !== -1 || p.indexOf('80') !== -1 || p.indexOf('meses') !== -1) {
         r = respostasProntas.regra_idade;
       }
-      // 6. SAC vs PRICE
-      else if (p.indexOf('sac') !== -1 || p.indexOf('price') !== -1 || p.indexOf('amortiz') !== -1 || p.indexOf('parcela') !== -1) {
+      // 7. SAC vs PRICE
+      else if (p.indexOf('sac') !== -1 || p.indexOf('price') !== -1 || p.indexOf('amortiz') !== -1) {
         r = respostasProntas.sac_price;
       }
-      // 7. FUNCIONALIDADES DO APP (LINK, PDF, PNG, VITRINE)
-      else if (p.indexOf('link') !== -1 || p.indexOf('compartilhar') !== -1 || p.indexOf('cliente') !== -1) {
+      // 8. FUNCIONALIDADES DO APP (LINK, PDF, PNG, VITRINE)
+      else if (p.indexOf('link') !== -1 || p.indexOf('compartilhar') !== -1 || p.indexOf('vitrine') !== -1) {
         r = respostasProntas.link_vitrine;
       }
       else if (p.indexOf('pdf') !== -1 || p.indexOf('apresenta') !== -1) {
         r = respostasProntas.exportar_pdf;
       }
-      else if (p.indexOf('png') !== -1 || p.indexOf('foto') !== -1 || p.indexOf('imagem') !== -1 || p.indexOf('baixar') !== -1) {
+      else if (p.indexOf('png') !== -1 || p.indexOf('foto') !== -1 || p.indexOf('imagem') !== -1 || p.indexOf('card') !== -1) {
         r = respostasProntas.exportar_png;
       }
-      // 8. ANTISSUMIÇO / NEGOCIAÇÃO
-      else if (p.indexOf('sumiu') !== -1 || p.indexOf('vácuo') !== -1 || p.indexOf('descarte') !== -1 || p.indexOf('bolo') !== -1 || p.indexOf('sumiço') !== -1) {
-        r = respostasProntas.cliente_sumiu;
-      }
       else if (p.indexOf('documento') !== -1 || p.indexOf('docs') !== -1 || p.indexOf('papel') !== -1) {
-        r = '📑 Dica de Envio de Documentos:\n\n' +
-            'Gere a mensagem do script 4 na aba "Antissumiço". Ela cria senso de urgência bancária explicando que a taxa simulada e a vaga na mesa de crédito dependem do fechamento do lote semanal!';
+        r = '📑 Dica de Envio de Documentos:\n\nGere a mensagem do script 4 na aba "Antissumiço". Ela cria senso de urgência bancária explicando que a taxa simulada e a vaga na mesa de crédito dependem do fechamento do lote semanal!';
       }
-      // 9. RESPOSTA AMIGÁVEL QUANDO NÃO RECONHECE
+      // 9. RESPOSTA DE SUPORTE CONTEXTUALIZADA
       else {
-        r = 'Opa! Entendi o que você disse, mas posso ser bem mais específico. Quer que eu detalhe as **cotas de financiamento**, os **tetos de renda**, como funciona a **regra de idade**, ou prefere saber como **enviar o link da vitrine** pro cliente?';
+        r = 'Compreendido! Posso ajudar com:\n\n' +
+            '• Regras e cotas de financiamento da Caixa (Planta, Novo ou Usado)\n' +
+            '• Tetos de renda e juros do MCMV ou SBPE\n' +
+            '• Técnicas da aba Antissumiço para destravar clientes\n' +
+            '• Como exportar os links e apresentações da Vitrine Express.';
       }
 
       setTimeout(function() {
