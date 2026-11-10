@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>ImobFlow - Central de Fechamento</title>
-  <!-- Biblioteca para exportar o card como imagem PNG -->
+  <!-- Bibliotecas para exportar Imagem e PDF -->
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background-color: #020617; color: #f8fafc; padding-bottom: 110px; }
@@ -28,7 +29,7 @@
     .pill { background: #1e293b; color: #94a3b8; font-size: 10px; padding: 3px 8px; border-radius: 20px; font-weight: 600; }
     .card-desc { font-size: 12px; color: #94a3b8; margin-bottom: 14px; line-height: 1.4; }
 
-    /* Controles de Linha / Seletores Pílula */
+    /* Seletores Pílula */
     .selector-label { display: block; font-size: 11px; font-weight: 600; color: #cbd5e1; margin-bottom: 6px; }
     .pill-group { display: flex; gap: 6px; margin-bottom: 12px; background: #020617; padding: 4px; border-radius: 10px; border: 1px solid #1e293b; }
     .pill-btn { flex: 1; background: transparent; border: none; color: #94a3b8; padding: 8px 4px; font-size: 11px; font-weight: 700; border-radius: 8px; cursor: pointer; text-align: center; transition: all 0.15s ease; }
@@ -48,6 +49,7 @@
     .btn-emerald { background: #10b981; color: #020617; margin-top: 8px; }
     .btn-secondary { background: #1e293b; border: 1px solid rgba(16, 185, 129, 0.3); color: #34d399; margin-top: 10px; font-weight: 600; font-size: 12px; }
     .btn-download { background: #3b82f6; color: #ffffff; margin-top: 10px; }
+    .btn-purple { background: #8b5cf6; color: #ffffff; margin-top: 10px; }
 
     /* Resultados */
     .result-box { background: linear-gradient(135deg, #0f172a, #09101f); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 16px; padding: 16px; margin-bottom: 16px; }
@@ -63,14 +65,19 @@
     /* Script Box */
     .script-box { background: #020617; border: 1px solid #1e293b; border-radius: 10px; padding: 12px; font-size: 12px; color: #cbd5e1; line-height: 1.5; white-space: pre-line; font-family: monospace; margin: 10px 0; }
 
-    /* Vitrine Card */
-    #card-export-area { background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; overflow: hidden; margin-top: 12px; }
-    .vitrine-img-container { height: 210px; background: #020617; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    /* Vitrine Card Interativa */
+    #card-export-area { background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; overflow: hidden; margin-top: 12px; user-select: none; }
+    .vitrine-img-container { height: 230px; background: #020617; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; touch-action: pan-y; }
     .vitrine-img { width: 100%; height: 100%; object-fit: cover; }
     .vitrine-badge { position: absolute; top: 12px; left: 12px; background: #10b981; color: #020617; font-size: 9px; font-weight: 900; padding: 4px 8px; border-radius: 6px; z-index: 5; }
     .vitrine-counter { position: absolute; bottom: 10px; right: 10px; background: rgba(0,0,0,0.7); color: #fff; font-size: 10px; padding: 3px 8px; border-radius: 12px; z-index: 5; }
+    
+    .slide-arrow { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(15, 23, 42, 0.75); border: 1px solid #334155; color: #fff; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; cursor: pointer; z-index: 6; }
+    .slide-arrow.prev { left: 8px; }
+    .slide-arrow.next { right: 8px; }
+    
     .gallery-dots { display: flex; gap: 6px; justify-content: center; padding: 8px; background: #0b1329; }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: #334155; cursor: pointer; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #334155; cursor: pointer; transition: all 0.2s; }
     .dot.active { background: #10b981; width: 18px; border-radius: 4px; }
     
     .vitrine-body { padding: 16px; }
@@ -91,7 +98,7 @@
     .nav-btn.active { color: #10b981; }
     .nav-icon { font-size: 18px; margin-bottom: 2px; }
 
-    /* Toast */
+    #btn-lead-whatsapp-float { display: none; position: fixed; bottom: 16px; left: 16px; right: 16px; max-width: 448px; margin: 0 auto; background: #10b981; color: #020617; font-size: 14px; font-weight: 800; padding: 14px; border-radius: 12px; text-align: center; text-decoration: none; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4); z-index: 1000; }
     .toast { position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%) translateY(20px); background: #10b981; color: #020617; padding: 10px 18px; border-radius: 8px; font-size: 12px; font-weight: 700; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 1000; max-width: 90%; text-align: center; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -101,7 +108,7 @@
 <body>
 
   <!-- Topbar -->
-  <header>
+  <header id="app-header">
     <div class="topbar-content">
       <div class="logo-box">
         <div class="logo-badge">IF</div>
@@ -115,25 +122,34 @@
   </header>
 
   <main>
-    <!-- ABA 1: CALCULADORA COM SELETORES CLICÁVEIS -->
+    <!-- ABA 1: CALCULADORA COM SELETORES ATUALIZADOS -->
     <section id="tab-calculator">
       <div class="card">
         <div class="card-header">
           <h2 class="card-title">⚡ Estudo de Financiamento</h2>
           <span class="pill" id="badge-tipo-linha">MCMV (Caixa)</span>
         </div>
-        <p class="card-desc">Selecione a linha de crédito e a tabela de amortização para o cálculo exato.</p>
+        <p class="card-desc">Cálculo assertivo baseado na tabela oficial da Caixa (taxas e cotas por tipo de imóvel).</p>
 
-        <!-- SELETOR 1: LINHA DE CRÉDITO -->
-        <span class="selector-label">Modalidade de Financiamento:</span>
+        <!-- SELETOR 1: TIPO DE IMÓVEL (NOVO / PLANTA / USADO) -->
+        <span class="selector-label">Tipo do Imóvel:</span>
+        <div class="pill-group">
+          <button type="button" id="btn-tipo-planta" class="pill-btn active" onclick="selecionarTipoImovel('planta')">Na Planta</button>
+          <button type="button" id="btn-tipo-novo" class="pill-btn" onclick="selecionarTipoImovel('novo')">Novo</button>
+          <button type="button" id="btn-tipo-usado" class="pill-btn" onclick="selecionarTipoImovel('usado')">Usado</button>
+        </div>
+
+        <!-- SELETOR 2: LINHA DE CRÉDITO -->
+        <span class="selector-label">Linha de Financiamento:</span>
         <div class="pill-group">
           <button type="button" id="btn-mod-mcmv" class="pill-btn active" onclick="selecionarModalidade('mcmv')">MCMV</button>
+          <button type="button" id="btn-mod-faixa4" class="pill-btn" onclick="selecionarModalidade('faixa4')">Classe Média (Fx 4)</button>
           <button type="button" id="btn-mod-procotista" class="pill-btn" onclick="selecionarModalidade('procotista')">Pró-Cotista</button>
           <button type="button" id="btn-mod-sbpe" class="pill-btn" onclick="selecionarModalidade('sbpe')">SBPE</button>
         </div>
 
-        <!-- SELETOR 2: AMORTIZAÇÃO (SAC vs PRICE) -->
-        <span class="selector-label">Tabela de Amortização (Parcela):</span>
+        <!-- SELETOR 3: AMORTIZAÇÃO (SAC vs PRICE) -->
+        <span class="selector-label">Tabela de Amortização:</span>
         <div class="pill-group">
           <button type="button" id="btn-tab-sac" class="pill-btn active" onclick="selecionarAmortizacao('sac')">SAC (Decrescente)</button>
           <button type="button" id="btn-tab-price" class="pill-btn" onclick="selecionarAmortizacao('price')">PRICE (Fixa)</button>
@@ -176,7 +192,7 @@
             <strong id="res-parcela">—</strong>
           </div>
           <div class="result-item">
-            <span>Financiamento Aprovado</span>
+            <span id="label-financiamento">Financiamento Aprovado</span>
             <strong id="res-financiamento">—</strong>
           </div>
           <div class="result-item">
@@ -193,7 +209,7 @@
           </div>
         </div>
         <button type="button" onclick="copiarResumoWhatsApp()" class="btn-action btn-secondary">Copiar Resumo p/ WhatsApp</button>
-        <p class="disclaimer">Financiamento imobiliário considera teto operacional de até 80% do valor do imóvel e comprometimento máximo de 30% da renda. Sujeito à análise de crédito.</p>
+        <p class="disclaimer">Cálculo alinhado à tabela oficial da Caixa (taxas cotistas S/SE/CO e limites de cota por modalidade).</p>
       </div>
     </section>
 
@@ -249,23 +265,23 @@
       </div>
     </section>
 
-    <!-- ABA 3: VITRINE EXPRESS -->
+    <!-- ABA 3: VITRINE INTERATIVA -->
     <section id="tab-vitrine" class="hidden">
-      <div class="card">
+      <div id="vitrine-form-card" class="card">
         <div class="card-header">
-          <h2 class="card-title">📲 Gerador de Vitrine Imobiliária</h2>
-          <span class="pill">Multi-Fotos & Download</span>
+          <h2 class="card-title">📲 Vitrine Interativa & Exportação</h2>
+          <span class="pill">Multi-Fotos & Slide</span>
         </div>
-        <p class="card-desc">Carregue várias fotos, personalize seus dados e baixe o card pronto para postar ou mandar no WhatsApp.</p>
+        <p class="card-desc">Carregue várias fotos, gere um link público para o cliente passar fotos ou exporte em PDF.</p>
 
         <div class="form-group">
-          <label>Fotos do Imóvel (Selecione 1 ou várias juntas)</label>
+          <label>Fotos do Imóvel (Selecione 1 ou várias de uma vez)</label>
           <input type="file" id="prop-photos-input" accept="image/*" multiple onchange="carregarMultiplasFotos(this)">
         </div>
 
         <div class="form-group">
           <label>Título do Imóvel</label>
-          <input type="text" id="prop-title" placeholder="Ex: Residencial Vista Verde - 2 Qts" oninput="atualizarVitrineCard()">
+          <input type="text" id="prop-title" placeholder="Ex: Residencial Araucária - 2 Qts" oninput="atualizarVitrineCard()">
         </div>
 
         <div class="form-row">
@@ -275,38 +291,41 @@
           </div>
           <div class="form-group">
             <label>Bairro / Cidade</label>
-            <input type="text" id="prop-location" placeholder="Ex: Centro - Curitiba/PR" oninput="atualizarVitrineCard()">
+            <input type="text" id="prop-location" placeholder="Ex: Portão - Curitiba/PR" oninput="atualizarVitrineCard()">
           </div>
         </div>
 
         <div class="form-group">
           <label>Destaques (separados por vírgula)</label>
-          <input type="text" id="prop-features" placeholder="Ex: Vaga Coberta, Sacada com Churrasqueira, Elevador" oninput="atualizarVitrineCard()">
+          <input type="text" id="prop-features" placeholder="Ex: Vaga Coberta, Sacada c/ Churrasqueira, Elevador" oninput="atualizarVitrineCard()">
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label>Seu Nome / Imobiliária</label>
-            <input type="text" id="prop-agent" placeholder="Ex: João Silva - Corretor" oninput="atualizarVitrineCard()">
+            <input type="text" id="prop-agent" placeholder="Ex: Gabriel Macena" oninput="atualizarVitrineCard()">
           </div>
           <div class="form-group">
-            <label>Seu WhatsApp</label>
-            <input type="text" id="prop-phone" placeholder="Ex: (41) 99999-9999" oninput="atualizarVitrineCard()">
+            <label>Seu WhatsApp (com DDD)</label>
+            <input type="text" id="prop-phone" placeholder="Ex: (41) 98782-9577" oninput="atualizarVitrineCard()">
           </div>
         </div>
-
-        <button type="button" onclick="atualizarVitrineCard()" class="btn-action btn-emerald">✨ Atualizar Pré-visualização</button>
       </div>
 
-      <!-- CARD EXPORTÁVEL -->
+      <!-- CARD EXPORTÁVEL COM SLIDE INTERATIVO -->
       <div id="card-export-area">
-        <div class="vitrine-img-container">
+        <div class="vitrine-img-container" id="swipe-area">
           <span class="vitrine-badge">OPORTUNIDADE EXCLUSIVA</span>
+          
+          <div id="arrow-prev" class="slide-arrow prev" style="display:none;" onclick="mudarFotoSlide(-1)">◀</div>
+          <div id="arrow-next" class="slide-arrow next" style="display:none;" onclick="mudarFotoSlide(1)">▶</div>
+          
           <img id="main-preview-img" class="vitrine-img" src="" style="display:none;" alt="Imóvel">
           <span id="prev-photo-placeholder" style="color: #64748b; font-size: 13px;">[Selecione fotos acima]</span>
           <span id="photo-counter" class="vitrine-counter" style="display:none;">1 / 1</span>
         </div>
         <div id="gallery-dots-bar" class="gallery-dots" style="display:none;"></div>
+        
         <div class="vitrine-body">
           <div class="vitrine-title-row">
             <h4 id="prev-title">Título do Imóvel</h4>
@@ -325,6 +344,8 @@
         </div>
       </div>
 
+      <button type="button" onclick="copiarLinkPublicoInterativo()" class="btn-action btn-emerald">🔗 Copiar Link Interativo para o Cliente</button>
+      <button type="button" onclick="baixarApresentacaoPDF()" class="btn-action btn-purple">📄 Baixar Apresentação em PDF (Multi-Fotos)</button>
       <button type="button" onclick="baixarCardComoImagem()" class="btn-action btn-download">📥 Baixar Card em Imagem (PNG)</button>
       <button type="button" onclick="copiarTextoVitrine()" class="btn-action btn-secondary">Copiar Legenda p/ WhatsApp</button>
     </section>
@@ -367,8 +388,10 @@
     </section>
   </main>
 
-  <!-- Navegação -->
-  <nav>
+  <a id="btn-lead-whatsapp-float" href="#" target="_blank">💬 Falar com o Corretor no WhatsApp</a>
+
+  <!-- Navegação Inferior -->
+  <nav id="app-nav">
     <div class="nav-container">
       <button type="button" id="nav-calculator" onclick="irParaAba('calculator')" class="nav-btn active">
         <span class="nav-icon">⚡</span>
@@ -393,8 +416,9 @@
     var fotoIndexAtual = 0;
 
     // Estados da Calculadora
-    var modalidadeAtual = 'mcmv'; // 'mcmv' | 'procotista' | 'sbpe'
-    var amortizacaoAtual = 'sac';  // 'sac' | 'price'
+    var tipoImovelAtual = 'planta'; // 'planta' | 'novo' | 'usado'
+    var modalidadeAtual = 'mcmv';    // 'mcmv' | 'faixa4' | 'procotista' | 'sbpe'
+    var amortizacaoAtual = 'sac';   // 'sac' | 'price'
 
     function mostrarToast(msg) {
       var t = document.getElementById('toast');
@@ -407,7 +431,6 @@
       }, 2400);
     }
 
-    /* MÁSCARAS E FORMATAÇÃO */
     function aplicarMascaraMoeda(input) {
       var valor = input.value.replace(/\D/g, '');
       if (!valor) {
@@ -477,20 +500,26 @@
       window.scrollTo(0, 0);
     }
 
-    /* CONTROLE DOS SELETORES CLICÁVEIS */
+    /* SELETORES */
+    function selecionarTipoImovel(tipo) {
+      tipoImovelAtual = tipo;
+      ['planta', 'novo', 'usado'].forEach(function(t) {
+        var btn = document.getElementById('btn-tipo-' + t);
+        if (btn) btn.className = (t === tipo) ? 'pill-btn active' : 'pill-btn';
+      });
+      calcularFinanciamento(false);
+    }
+
     function selecionarModalidade(tipo) {
       modalidadeAtual = tipo;
-      var mods = ['mcmv', 'procotista', 'sbpe'];
-      mods.forEach(function(m) {
+      ['mcmv', 'faixa4', 'procotista', 'sbpe'].forEach(function(m) {
         var btn = document.getElementById('btn-mod-' + m);
-        if (btn) {
-          if (m === tipo) btn.className = 'pill-btn active';
-          else btn.className = 'pill-btn';
-        }
+        if (btn) btn.className = (m === tipo) ? 'pill-btn active' : 'pill-btn';
       });
 
       var badge = document.getElementById('badge-tipo-linha');
       if (tipo === 'mcmv') badge.innerText = 'MCMV (Caixa)';
+      else if (tipo === 'faixa4') badge.innerText = 'Classe Média (Fx 4)';
       else if (tipo === 'procotista') badge.innerText = 'Pró-Cotista FGTS';
       else badge.innerText = 'SBPE / Mercado';
 
@@ -509,7 +538,7 @@
       calcularFinanciamento(false);
     }
 
-    /* ABA 1: CALCULADORA ASSERTIVA */
+    /* ABA 1: MOTOR DE CÁLCULO BASEADO NA TABELA CAIXA */
     function calcularFinanciamento(comAviso) {
       var imovelEl = document.getElementById('calc-imovel');
       var rendaEl = document.getElementById('calc-income');
@@ -540,39 +569,91 @@
 
       document.getElementById('res-prazo').innerText = prazoMeses + ' meses (' + prazoAnos + ' anos)';
 
-      // Definir taxa anual baseada na modalidade selecionada
-      var jurosAnual = 10.5;
+      var isNovoOrPlanta = (tipoImovelAtual === 'planta' || tipoImovelAtual === 'novo');
+      var cotaMaxima = 0.80; // Padrão 80%
+      var jurosAnual = 10.92;
+      var tetoImovelPermitido = 2250000;
+      var avisoLimite = '';
 
       if (modalidadeAtual === 'mcmv') {
-        if (renda <= 2640) jurosAnual = 4.50;
-        else if (renda <= 4400) jurosAnual = 5.00;
-        else if (renda <= 5000) jurosAnual = 5.50;
-        else if (renda <= 8000) jurosAnual = 7.66;
-        else jurosAnual = 8.16;
+        // Tabela MCMV: Regras Faixa 1, 2 e 3
+        if (renda <= 2160) {
+          jurosAnual = 4.25;
+          tetoImovelPermitido = 275000;
+          cotaMaxima = isNovoOrPlanta ? (amortizacaoAtual === 'sac' ? 0.90 : 0.80) : 0.80;
+        } else if (renda <= 2850) {
+          jurosAnual = 4.50;
+          tetoImovelPermitido = 275000;
+          cotaMaxima = isNovoOrPlanta ? (amortizacaoAtual === 'sac' ? 0.90 : 0.80) : 0.80;
+        } else if (renda <= 3200) {
+          jurosAnual = 4.75;
+          tetoImovelPermitido = 275000;
+          cotaMaxima = isNovoOrPlanta ? (amortizacaoAtual === 'sac' ? 0.90 : 0.80) : 0.80;
+        } else if (renda <= 3500) {
+          jurosAnual = 5.00;
+          tetoImovelPermitido = 275000;
+          cotaMaxima = isNovoOrPlanta ? (amortizacaoAtual === 'sac' ? 0.90 : 0.80) : 0.80;
+        } else if (renda <= 4000) {
+          jurosAnual = 5.50;
+          tetoImovelPermitido = 275000;
+          cotaMaxima = isNovoOrPlanta ? (amortizacaoAtual === 'sac' ? 0.90 : 0.80) : 0.80;
+        } else if (renda <= 5000) {
+          jurosAnual = 6.50;
+          tetoImovelPermitido = 275000;
+          cotaMaxima = isNovoOrPlanta ? (amortizacaoAtual === 'sac' ? 0.90 : 0.80) : 0.80;
+        } else if (renda <= 9600) {
+          jurosAnual = 7.66; // MCMV Faixa 3
+          tetoImovelPermitido = 400000;
+          cotaMaxima = 0.80;
+        } else {
+          jurosAnual = 7.66;
+          tetoImovelPermitido = 400000;
+          cotaMaxima = 0.80;
+        }
+
+        if (valorImovel > tetoImovelPermitido) {
+          avisoLimite = ' ⚠️ Atenção: Valor excede o teto desta faixa do MCMV (R$ ' + Number(tetoImovelPermitido).toLocaleString('pt-BR') + ').';
+        }
+
+      } else if (modalidadeAtual === 'faixa4') {
+        // Faixa 4 (Classe Média): Renda 9.600 a 13.000, Imóvel até 600k
+        jurosAnual = 10.00;
+        tetoImovelPermitido = 600000;
+        cotaMaxima = isNovoOrPlanta ? 0.80 : 0.60; // 80% novo/planta, 60% usado Sul/Sudeste
+        if (valorImovel > tetoImovelPermitido) {
+          avisoLimite = ' ⚠️ Atenção: Excede o teto de R$ 600 mil da Faixa 4.';
+        }
+
       } else if (modalidadeAtual === 'procotista') {
-        // Pró-Cotista: taxa com desconto para cotistas com imóvel até o teto SFH
+        // Pró-Cotista: até 500k, 8.66% a.a., cota 60%
         jurosAnual = 8.66;
+        tetoImovelPermitido = 500000;
+        cotaMaxima = 0.60;
+        if (valorImovel > tetoImovelPermitido) {
+          avisoLimite = ' ⚠️ Atenção: Excede o teto de R$ 500 mil do Pró-Cotista.';
+        }
+
       } else {
-        // SBPE (Médio e Alto Padrão)
-        jurosAnual = 10.49;
+        // SBPE: até 2.25M, 10.92% a.a., 80% SAC ou 70% PRICE
+        jurosAnual = 10.92;
+        tetoImovelPermitido = 2250000;
+        cotaMaxima = (amortizacaoAtual === 'sac') ? 0.80 : 0.70;
       }
 
       var margemMaxCaixa = renda * 0.30;
-      var teto80 = valorImovel * 0.80;
+      var tetoFinanceiro = valorImovel * cotaMaxima;
       var taxaMensal = Math.pow(1 + (jurosAnual / 100), 1/12) - 1;
 
       var financPelaRenda = 0;
       var parcelaCalculada = 0;
 
       if (amortizacaoAtual === 'sac') {
-        // Tabela SAC: amortização constante + juros
         financPelaRenda = (margemMaxCaixa / ((1 / prazoMeses) + taxaMensal));
       } else {
-        // Tabela PRICE: PMT fixo = PV * i / (1 - (1+i)^-n) -> PV = PMT * (1 - (1+i)^-n) / i
         financPelaRenda = margemMaxCaixa * (1 - Math.pow(1 + taxaMensal, -prazoMeses)) / taxaMensal;
       }
 
-      var financAprovado = Math.min(financPelaRenda, teto80);
+      var financAprovado = Math.min(financPelaRenda, tetoFinanceiro);
 
       if (amortizacaoAtual === 'sac') {
         parcelaCalculada = (financAprovado / prazoMeses) + (financAprovado * taxaMensal);
@@ -581,14 +662,16 @@
       }
 
       var entradaNecessaria = Math.max(0, valorImovel - financAprovado - fgts);
+      var cotaPct = Math.round(cotaMaxima * 100);
 
-      var modalidadeTexto = modalidadeAtual.toUpperCase();
-      if (modalidadeAtual === 'procotista') modalidadeTexto = 'Pró-Cotista';
+      document.getElementById('label-financiamento').innerText = 'Financiamento (até ' + cotaPct + '%)';
 
-      if (financAprovado < teto80) {
-        statusEl.innerHTML = '<span style="color:#fbbf24;">⚠️ Pela renda em ' + modalidadeTexto + ' (' + amortizacaoAtual.toUpperCase() + '), a Caixa aprova até ' + formatarReal(financAprovado) + '. Entrada requerida: ' + formatarReal(entradaNecessaria) + '.</span>';
+      var descTipo = (tipoImovelAtual === 'planta' ? 'Planta' : (tipoImovelAtual === 'novo' ? 'Novo' : 'Usado'));
+
+      if (financAprovado < tetoFinanceiro) {
+        statusEl.innerHTML = '<span style="color:#fbbf24;">⚠️ Pela renda em ' + descTipo + ' (' + amortizacaoAtual.toUpperCase() + '), aprova até ' + formatarReal(financAprovado) + '. Entrada requerida: ' + formatarReal(entradaNecessaria) + '.' + avisoLimite + '</span>';
       } else {
-        statusEl.innerHTML = '<span style="color:#34d399;">✔ Renda aprova o teto máximo de 80% em ' + modalidadeTexto + ' (' + formatarReal(financAprovado) + '). Entrada padrão de 20%.</span>';
+        statusEl.innerHTML = '<span style="color:#34d399;">✔ Renda aprova a cota máxima de ' + cotaPct + '% para imóvel ' + descTipo + ' (' + formatarReal(financAprovado) + '). Taxa: ' + jurosAnual + '% a.a.' + avisoLimite + '</span>';
       }
 
       document.getElementById('res-financiamento').innerText = formatarReal(financAprovado);
@@ -610,7 +693,8 @@
       var fgts = document.getElementById('res-fgts').innerText;
       var tipoLinha = modalidadeAtual.toUpperCase();
       if (modalidadeAtual === 'procotista') tipoLinha = 'Pró-Cotista';
-      var tipoAmort = amortizacaoAtual.toUpperCase();
+      if (modalidadeAtual === 'faixa4') tipoLinha = 'Classe Média (Fx 4)';
+      var descTipo = (tipoImovelAtual === 'planta' ? 'Na Planta' : (tipoImovelAtual === 'novo' ? 'Novo' : 'Usado'));
 
       if (!valorImovel || !renda) {
         mostrarToast('Preencha os valores antes de copiar.');
@@ -618,9 +702,9 @@
       }
 
       var texto = 'Olá! Montei um estudo de financiamento Caixa exclusivo para você:\n\n' +
-                  '🏢 *Imóvel pretendido:* R$ ' + valorImovel + '\n' +
+                  '🏢 *Imóvel pretendido:* R$ ' + valorImovel + ' (' + descTipo + ')\n' +
                   '💼 *Renda familiar declarada:* R$ ' + renda + '\n' +
-                  '📌 *Modalidade:* ' + tipoLinha + ' (Tabela ' + tipoAmort + ')\n' +
+                  '📌 *Linha:* ' + tipoLinha + ' (Tabela ' + amortizacaoAtual.toUpperCase() + ')\n' +
                   '📅 *Prazo máximo calculado:* ' + prazo + '\n' +
                   '🏦 *Financiamento estimado:* até ' + financ + '\n' +
                   '📉 *Parcela estimada:* ' + parc + '\n' +
@@ -693,7 +777,7 @@
       copiarTextoSeguro(text, 'Script copiado!');
     }
 
-    /* ABA 3: VITRINE MULTI-FOTOS E EXPORTAÇÃO */
+    /* ABA 3: VITRINE MULTI-FOTOS E CARROSSEL */
     function carregarMultiplasFotos(input) {
       if (input.files && input.files.length > 0) {
         fotosGaleria = [];
@@ -724,6 +808,8 @@
       var img = document.getElementById('main-preview-img');
       var placeholder = document.getElementById('prev-photo-placeholder');
       var counter = document.getElementById('photo-counter');
+      var btnPrev = document.getElementById('arrow-prev');
+      var btnNext = document.getElementById('arrow-next');
 
       img.src = fotosGaleria[idx];
       img.style.display = 'block';
@@ -732,8 +818,12 @@
       if (fotosGaleria.length > 1) {
         counter.style.display = 'block';
         counter.innerText = (idx + 1) + ' / ' + fotosGaleria.length;
+        btnPrev.style.display = 'flex';
+        btnNext.style.display = 'flex';
       } else {
         counter.style.display = 'none';
+        btnPrev.style.display = 'none';
+        btnNext.style.display = 'none';
       }
 
       var dots = document.querySelectorAll('.gallery-dots .dot');
@@ -742,6 +832,25 @@
         else d.className = 'dot';
       });
     }
+
+    function mudarFotoSlide(direcao) {
+      if (fotosGaleria.length <= 1) return;
+      fotoIndexAtual += direcao;
+      if (fotoIndexAtual < 0) fotoIndexAtual = fotosGaleria.length - 1;
+      if (fotoIndexAtual >= fotosGaleria.length) fotoIndexAtual = 0;
+      exibirFotoGaleria(fotoIndexAtual);
+    }
+
+    var toqueInicioX = 0;
+    var swipeArea = document.getElementById('swipe-area');
+    swipeArea.addEventListener('touchstart', function(e) {
+      toqueInicioX = e.changedTouches[0].screenX;
+    }, false);
+    swipeArea.addEventListener('touchend', function(e) {
+      var toqueFimX = e.changedTouches[0].screenX;
+      if (toqueInicioX - toqueFimX > 40) mudarFotoSlide(1);
+      if (toqueFimX - toqueInicioX > 40) mudarFotoSlide(-1);
+    }, false);
 
     function montarPontosGaleria() {
       var bar = document.getElementById('gallery-dots-bar');
@@ -768,8 +877,8 @@
       var title = document.getElementById('prop-title').value || 'Título do Imóvel';
       var price = document.getElementById('prop-price').value || '0,00';
       var loc = document.getElementById('prop-location').value || 'Localização do Imóvel';
-      var agent = document.getElementById('prop-agent').value || 'Nome do Corretor / Empresa';
-      var phone = document.getElementById('prop-phone').value || 'WhatsApp / Contato';
+      var agent = document.getElementById('prop-agent').value || 'Seu Nome';
+      var phone = document.getElementById('prop-phone').value || 'Seu Telefone';
       var featsRaw = document.getElementById('prop-features').value || 'Destaque 1, Destaque 2';
       var feats = featsRaw.split(',');
 
@@ -789,6 +898,105 @@
           container.appendChild(span);
         }
       }
+    }
+
+    function copiarLinkPublicoInterativo() {
+      var title = document.getElementById('prop-title').value || 'Imóvel';
+      var price = document.getElementById('prop-price').value || '';
+      var loc = document.getElementById('prop-location').value || '';
+      var agent = document.getElementById('prop-agent').value || '';
+      var phone = document.getElementById('prop-phone').value || '';
+      var feats = document.getElementById('prop-features').value || '';
+
+      var dados = { t: title, p: price, l: loc, a: agent, ph: phone, f: feats };
+      var base64 = btoa(unescape(encodeURIComponent(JSON.stringify(dados))));
+      var urlFinal = window.location.origin + window.location.pathname + '?v=' + base64;
+
+      copiarTextoSeguro(urlFinal, 'Link interativo do imóvel copiado!');
+    }
+
+    function baixarApresentacaoPDF() {
+      if (!window.jspdf) {
+        mostrarToast('Carregando biblioteca PDF...');
+        return;
+      }
+      mostrarToast('Gerando apresentação em PDF...');
+
+      var doc = new window.jspdf.jsPDF('p', 'mm', 'a4');
+      var title = document.getElementById('prop-title').value || 'Imóvel';
+      var price = document.getElementById('prop-price').value || 'Consulte';
+      var loc = document.getElementById('prop-location').value || '';
+      var agent = document.getElementById('prop-agent').value || 'Corretor';
+      var phone = document.getElementById('prop-phone').value || '';
+      var feats = document.getElementById('prop-features').value || '';
+
+      doc.setFillColor(15, 23, 42);
+      doc.rect(0, 0, 210, 297, 'F');
+
+      doc.setTextColor(52, 211, 153);
+      doc.setFontSize(22);
+      doc.setFont('helvetica', 'bold');
+      doc.text(title, 14, 25);
+
+      doc.setTextColor(248, 250, 252);
+      doc.setFontSize(14);
+      doc.text('Valor: R$ ' + price.replace('R$', '').trim(), 14, 34);
+
+      doc.setFontSize(11);
+      doc.setTextColor(148, 163, 184);
+      doc.text('Localização: ' + loc, 14, 42);
+
+      if (fotosGaleria.length > 0) {
+        try {
+          doc.addImage(fotosGaleria[0], 'JPEG', 14, 50, 182, 115);
+        } catch(e) {}
+      }
+
+      doc.setFontSize(12);
+      doc.setTextColor(255, 255, 255);
+      doc.text('Destaques do Imóvel:', 14, 178);
+
+      doc.setFontSize(10);
+      doc.setTextColor(203, 213, 225);
+      var listaF = feats.split(',');
+      var posTop = 186;
+      for (var f = 0; f < listaF.length; f++) {
+        if (listaF[f].trim()) {
+          doc.text('• ' + listaF[f].trim(), 16, posTop);
+          posTop += 7;
+        }
+      }
+
+      doc.setDrawColor(51, 65, 85);
+      doc.line(14, 260, 196, 260);
+      doc.setFontSize(11);
+      doc.setTextColor(52, 211, 153);
+      doc.text('Atendimento Exclusivo: ' + agent + ' | WhatsApp: ' + phone, 14, 270);
+
+      if (fotosGaleria.length > 1) {
+        for (var p = 1; p < fotosGaleria.length; p++) {
+          doc.addPage();
+          doc.setFillColor(15, 23, 42);
+          doc.rect(0, 0, 210, 297, 'F');
+
+          doc.setTextColor(52, 211, 153);
+          doc.setFontSize(16);
+          doc.text(title + ' (Foto ' + (p + 1) + ')', 14, 20);
+
+          try {
+            doc.addImage(fotosGaleria[p], 'JPEG', 14, 30, 182, 140);
+          } catch(e) {}
+
+          doc.setDrawColor(51, 65, 85);
+          doc.line(14, 260, 196, 260);
+          doc.setFontSize(11);
+          doc.setTextColor(52, 211, 153);
+          doc.text('Contato: ' + phone + ' (' + agent + ')', 14, 270);
+        }
+      }
+
+      doc.save('apresentacao-' + title.toLowerCase().replace(/[^a-z0-9]/g, '-') + '.pdf');
+      mostrarToast('Apresentação em PDF descarregada com sucesso!');
     }
 
     function baixarCardComoImagem() {
@@ -839,6 +1047,34 @@
 
     window.onload = function() {
       atualizarVitrineCard();
+
+      var urlParams = new URLSearchParams(window.location.search);
+      var vitrinePayload = urlParams.get('v');
+
+      if (vitrinePayload) {
+        try {
+          var payload = JSON.parse(decodeURIComponent(escape(atob(vitrinePayload))));
+          document.getElementById('prop-title').value = payload.t || '';
+          document.getElementById('prop-price').value = payload.p || '';
+          document.getElementById('prop-location').value = payload.l || '';
+          document.getElementById('prop-agent').value = payload.a || '';
+          document.getElementById('prop-phone').value = payload.ph || '';
+          document.getElementById('prop-features').value = payload.f || '';
+          atualizarVitrineCard();
+
+          irParaAba('vitrine');
+          document.getElementById('vitrine-form-card').style.display = 'none';
+          document.getElementById('app-header').style.display = 'none';
+          document.getElementById('app-nav').style.display = 'none';
+
+          var btnFloat = document.getElementById('btn-lead-whatsapp-float');
+          var numLimpo = (payload.ph || '').replace(/\D/g, '');
+          if (numLimpo) {
+            btnFloat.style.display = 'block';
+            btnFloat.href = 'https://wa.me/55' + numLimpo + '?text=' + encodeURIComponent('Olá! Vi o imóvel ' + payload.t + ' e gostaria de mais informações.');
+          }
+        } catch(e) {}
+      }
     };
   </script>
 </body>
