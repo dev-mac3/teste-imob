@@ -102,7 +102,7 @@
     .toast { position: fixed; left: 50%; bottom: 90px; transform: translateX(-50%) translateY(20px); background: #10b981; color: #020617; padding: 10px 18px; border-radius: 8px; font-size: 12px; font-weight: 700; opacity: 0; pointer-events: none; transition: opacity .2s, transform .2s; z-index: 1000; max-width: 90%; text-align: center; }
     .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    /* COPILOTO IA CONVERSACIONAL */
+    /* COPILOTO IA */
     #ia-copilot-trigger { position: fixed; right: 16px; bottom: 82px; background: linear-gradient(135deg, #10b981, #059669); color: #020617; font-size: 12px; font-weight: 800; padding: 10px 14px; border-radius: 30px; display: flex; align-items: center; gap: 6px; box-shadow: 0 8px 20px rgba(16,185,129,0.4); z-index: 998; cursor: pointer; border: none; }
     #ia-copilot-modal { display: none; position: fixed; right: 12px; bottom: 80px; width: calc(100% - 24px); max-width: 420px; height: 500px; background: #0f172a; border: 1px solid #334155; border-radius: 18px; z-index: 1001; flex-direction: column; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
     .ia-header { background: #1e293b; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; }
@@ -222,7 +222,7 @@
           </div>
         </div>
         <button type="button" onclick="copiarResumoWhatsApp()" class="btn-action btn-secondary">Copiar Resumo p/ WhatsApp</button>
-        <p class="disclaimer">Cálculo alinhado à tabela oficial da Caixa (taxas cotistas S/SE/CO e limites de cota por modalidade).</p>
+        <p class="disclaimer">Cálculo alinhado à tabela oficial da Caixa (taxas cotistas S/SE/CO e limites de cota por modalidade)[cite: 6].</p>
       </div>
     </section>
 
@@ -357,7 +357,7 @@
         </div>
       </div>
 
-      <!-- AÇÕES EXCLUSIVAS DO CORRETOR (OCULTAS NO MODO CLIENTE) -->
+      <!-- AÇÕES EXCLUSIVAS DO CORRETOR -->
       <div id="vitrine-broker-actions">
         <button type="button" onclick="copiarLinkPublicoInterativo()" class="btn-action btn-emerald">🔗 Copiar Link Interativo para o Cliente</button>
         <button type="button" onclick="baixarApresentacaoPDF()" class="btn-action btn-purple">📄 Baixar Apresentação em PDF (Multi-Fotos)</button>
@@ -424,7 +424,7 @@
       </div>
     </div>
     <div class="ia-quick-topics">
-      <span class="ia-chip" onclick="perguntarCopiloto('Regras da Caixa')">Regras Caixa</span>
+      <span class="ia-chip" onclick="perguntarCopiloto('Cotas de Financiamento')">Cotas Gerais</span>
       <span class="ia-chip" onclick="perguntarCopiloto('Cotas de Usado')">Cotas Usado</span>
       <span class="ia-chip" onclick="perguntarCopiloto('Tetos de Renda')">Tetos de Renda</span>
       <span class="ia-chip" onclick="perguntarCopiloto('Regra de Idade')">Regra Idade</span>
@@ -1081,7 +1081,7 @@
       mostrarToast('A redirecionar para o checkout do plano ' + plano + '...');
     }
 
-    /* COPILOTO IA CONVERSACIONAL COM HISTÓRICO E TRAVA DE ESCOPO */
+    /* MOTOR CONVERSACIONAL CORRIGIDO E SEM TEXTOS RESIDUAIS */
     var historicoContextoIA = [];
 
     function alternarCopilotoIA() {
@@ -1106,94 +1106,103 @@
       var p = pergunta.toLowerCase().trim();
       var r = '';
 
-      // 1. FILTRO DE ESCOPO E SEGURANÇA (Anti-Fuga de Assunto)
-      var termosBloqueados = ['futebol', 'receita', 'bolo', 'política', 'presidente', 'filme', 'música', 'jogo', 'clima', 'tempo hoje', 'piada'];
-      var assuntoInvalido = false;
+      // 1. FILTRO DE ESCOPO (Anti-Fuga de Assunto)
+      var termosBloqueados = ['futebol', 'receita', 'politica', 'política', 'presidente', 'filme', 'musica', 'música', 'jogo', 'clima', 'tempo hoje', 'piada', 'historia'];
       for (var b = 0; b < termosBloqueados.length; b++) {
         if (p.indexOf(termosBloqueados[b]) !== -1) {
-          assuntoInvalido = true;
-          break;
+          r = 'Sou o assistente técnico exclusivo do ImobFlow. Respondo apenas sobre crédito imobiliário Caixa, simulações, uso do app e negociações com clientes. Como posso ajudar na sua pasta hoje?';
+          setTimeout(function() { adicionarMensagemChat('bot', r); }, 250);
+          return;
         }
       }
 
-      if (assuntoInvalido) {
-        r = 'Sou o assistente especializado exclusivo do ImobFlow. Minha base responde apenas sobre crédito imobiliário Caixa, financiamentos, uso do app e negociações de imóveis. Como posso ajudar com seus atendimentos?';
-        setTimeout(function() { adicionarMensagemChat('bot', r); }, 250);
-        return;
-      }
-
-      // 2. CONVERSAÇÃO / SAUDAÇÕES
-      if (p === 'oi' || p === 'ola' || p === 'olá' || p === 'bom dia' || p === 'boa tarde' || p === 'boa noite' || p === 'eai') {
-        r = 'Olá, corretor! Como posso acelerar seus fechamentos hoje? Pergunte sobre tetos, taxas da Caixa, como usar o app ou estratégias para cliente sumido.';
+      // 2. SAUDAÇÕES
+      if (['oi', 'ola', 'olá', 'bom dia', 'boa tarde', 'boa noite', 'eai', 'opa', 'fala'].includes(p)) {
+        r = 'Olá, corretor! Como posso ajudar nos seus fechamentos hoje? Pergunte sobre cotas, tetos, taxas da Caixa ou ferramentas da plataforma.';
       }
       else if (p.indexOf('quem e voce') !== -1 || p.indexOf('quem é você') !== -1 || p.indexOf('seu nome') !== -1) {
-        r = 'Sou o Copiloto ImobFlow, sua inteligência de bolso para crédito imobiliário Caixa, cálculo de capacidade financeira e fechamento de vendas.';
+        r = 'Sou o Copiloto ImobFlow, o seu assistente de bolso especializado em regras da Caixa Econômica Federal e rotina de fechamento imobiliário.';
       }
-      // 3. REGRAS DE COTAS (USADO vs PLANTA/NOVO)
-      else if (p.indexOf('usado') !== -1 && (p.indexOf('cota') !== -1 || p.indexOf('quanto financia') !== -1 || p.indexOf('%') !== -1 || p.indexOf('porcentagem') !== -1)) {
+      // 3. COTAS DE USADO
+      else if (p.indexOf('usado') !== -1 && (p.indexOf('cota') !== -1 || p.indexOf('%') !== -1 || p.indexOf('quanto') !== -1 || p.indexOf('financia') !== -1)) {
         r = '📌 Cotas Oficiais para Imóveis USADOS (Caixa 2026):\n' +
             '• MCMV (Faixas 1, 2 e 3): até 80%\n' +
             '• Classe Média (Faixa 4): até 60% (Sul/Sudeste) ou 80% (Norte/Nordeste/CO)\n' +
             '• Pró-Cotista: até 60%\n' +
             '• SBPE: até 80% no SAC ou 70% na PRICE.';
       }
-      else if ((p.indexOf('novo') !== -1 || p.indexOf('planta') !== -1) && (p.indexOf('cota') !== -1 || p.indexOf('%') !== -1)) {
+      // 4. COTAS DE NOVO OU PLANTA
+      else if ((p.indexOf('novo') !== -1 || p.indexOf('planta') !== -1) && (p.indexOf('cota') !== -1 || p.indexOf('%') !== -1 || p.indexOf('quanto') !== -1 || p.indexOf('financia') !== -1)) {
         r = '📌 Cotas para Imóveis NOVOS ou NA PLANTA:\n' +
             '• MCMV Faixas 1 e 2: até 90% (na SAC) ou 80% (na PRICE)\n' +
             '• MCMV Faixa 3: até 80%\n' +
             '• Classe Média (Faixa 4): até 80%\n' +
             '• Pró-Cotista: até 60%\n' +
-            '• SBPE: até 80% na SAC ou 70% na PRICE.';
+            '• SBPE: até 80% no SAC ou 70% na PRICE.';
       }
-      // 4. TETOS DE RENDA E IMÓVEL
-      else if (p.indexOf('teto') !== -1 || p.indexOf('faixa') !== -1 || p.indexOf('limite') !== -1) {
-        r = '📌 Tetos Oficiais de Renda e Imóvel (Caixa 2026):\n' +
+      // 5. COTAS GERAIS / PERGUNTA DIRETA SOBRE COTAS
+      else if (p.indexOf('cota') !== -1 || p.indexOf('cotas') !== -1 || p.indexOf('quanto financia') !== -1 || p.indexOf('porcentagem') !== -1) {
+        r = '📌 Resumo Geral de Cotas Caixa (2026):\n\n' +
+            '🏢 Imóveis Novos ou na Planta:\n' +
+            '• MCMV (Faixas 1 e 2): até 90% no SAC (80% Price)\n' +
+            '• MCMV (Faixa 3) e Classe Média (Fx 4): até 80%\n' +
+            '• Pró-Cotista: até 60%\n' +
+            '• SBPE: até 80% (SAC) ou 70% (PRICE)\n\n' +
+            '🏡 Imóveis Usados:\n' +
+            '• MCMV: até 80%\n' +
+            '• Classe Média (Fx 4): até 60% (S/SE)\n' +
+            '• Pró-Cotista: até 60%\n' +
+            '• SBPE: até 80% (SAC) ou 70% (PRICE).';
+      }
+      // 6. TETOS DE RENDA E IMÓVEL
+      else if (p.indexOf('teto') !== -1 || p.indexOf('limite') !== -1 || p.indexOf('faixa') !== -1 || p.indexOf('valor maximo') !== -1) {
+        r = '📌 Tetos Oficiais Caixa (2026):\n\n' +
             '• MCMV Faixa 1: Renda até R$ 2.850 | Imóvel até R$ 275 mil\n' +
-            '• MCMV Faixa 2: Renda R$ 2.850,01 a R$ 5.000 | Imóvel até R$ 275 mil\n' +
-            '• MCMV Faixa 3: Renda R$ 5.000,01 a R$ 9.600 | Imóvel até R$ 400 mil\n' +
-            '• Faixa 4 (Classe Média): Renda R$ 9.600,01 a R$ 13.000 | Imóvel até R$ 600 mil\n' +
+            '• MCMV Faixa 2: Renda R$ 2.850 a R$ 5.000 | Imóvel até R$ 275 mil\n' +
+            '• MCMV Faixa 3: Renda R$ 5.000 a R$ 9.600 | Imóvel até R$ 400 mil\n' +
+            '• Faixa 4 (Classe Média): Renda R$ 9.600 a R$ 13.000 | Imóvel até R$ 600 mil\n' +
             '• Pró-Cotista: Sem limite de renda | Imóvel até R$ 500 mil\n' +
             '• SBPE: Sem limite de renda | Imóvel até R$ 2,25 milhões.';
       }
-      // 5. TAXAS DE JUROS
+      // 7. TAXAS DE JUROS
       else if (p.indexOf('taxa') !== -1 || p.indexOf('juros') !== -1) {
-        r = '📌 Taxas de Juros Vigentes para Cotistas (S/SE/CO):\n' +
-            '• MCMV Fx 1: 4,25% a 4,50% a.a.\n' +
-            '• MCMV Fx 2: 4,75% a 6,50% a.a.\n' +
-            '• MCMV Fx 3: 7,66% a.a.\n' +
-            '• Faixa 4: 10,00% a.a.\n' +
+        r = '📌 Taxas de Juros Vigentes (Cotistas S/SE/CO):\n' +
+            '• MCMV Faixa 1: 4,25% a 4,50% a.a.\n' +
+            '• MCMV Faixa 2: 4,75% a 6,50% a.a.\n' +
+            '• MCMV Faixa 3: 7,66% a.a.\n' +
+            '• Faixa 4 (Classe Média): 10,00% a.a.\n' +
             '• Pró-Cotista: 8,66% a.a.\n' +
             '• SBPE: 10,92% a.a.';
       }
-      // 6. IDADE E PRAZO
+      // 8. IDADE E PRAZO
       else if (p.indexOf('idade') !== -1 || p.indexOf('prazo') !== -1 || p.indexOf('80') !== -1) {
         r = '📌 Regra de Idade e Prazo Caixa:\n' +
             '• Prazo máximo padrão: 420 meses (35 anos).\n' +
             '• Trava de Idade: Idade do comprador mais velho + prazo de financiamento não pode ultrapassar 80 anos e 6 meses (80,5 anos).\n' +
-            '• Se o cliente tiver 60 anos, o prazo máximo cai para 20 anos e 6 meses (246 meses).';
+            '• Exemplo: Comprador com 50 anos pode financiar no máximo 30,5 anos (366 meses).';
       }
-      // 7. SAC VS PRICE
+      // 9. SAC VS PRICE
       else if (p.indexOf('sac') !== -1 || p.indexOf('price') !== -1 || p.indexOf('amortiz') !== -1) {
         r = '📊 SAC vs PRICE:\n' +
             '• Tabela SAC: Primeira parcela mais alta, caindo mês a mês. Exige mais renda para aprovar o mesmo valor, pois a 1ª parcela não pode passar de 30% da renda.\n' +
             '• Tabela PRICE: Parcelas fixas niveladas. Como a 1ª parcela é menor, permite financiar um valor maior com a mesma renda.';
       }
-      // 8. FUNCIONAMENTO DO APP (LINK, PDF, IMAGEM)
+      // 10. FUNCIONAMENTO DO APP (LINK, PDF, IMAGEM)
       else if (p.indexOf('link') !== -1 || p.indexOf('cliente') !== -1 || p.indexOf('compartilhar') !== -1) {
         r = '📲 Como funciona o Link Interativo:\n' +
             '1. Na aba Vitrine, preencha os dados e anexe as fotos.\n' +
             '2. Clique em "Copiar Link Interativo para o Cliente".\n' +
-            '3. Ao abrir o link, o comprador navega por um carrossel de fotos limpo sem botões de corretor e com um botão direto pro seu WhatsApp!';
+            '3. Ao abrir o link, o comprador navega por um carrossel limpo sem botões de corretor e com um botão direto pro seu WhatsApp!';
       }
       else if (p.indexOf('pdf') !== -1) {
         r = '📄 Como gerar o PDF:\n' +
             'Clique no botão roxo "Baixar Apresentação em PDF". O app compila a capa técnica na página 1 e distribui cada foto adicional nas páginas seguintes com seus dados no rodapé.';
       }
-      else if (p.indexOf('png') !== -1 || p.indexOf('foto') !== -1 || p.indexOf('imagem') !== -1) {
+      else if (p.indexOf('png') !== -1 || p.indexOf('imagem') !== -1) {
         r = '📥 Baixar Card (PNG):\n' +
-            'O botão azul "Baixar Card em Imagem" renderiza um arquivo PNG de alta qualidade na memória do seu celular ou PC, formatado para postar nos Stories, Status ou Feed.';
+            'O botão azul "Baixar Card em Imagem" renderiza um arquivo PNG de alta resolução na memória do seu celular ou PC, formatado para postar nos Stories, Status ou Feed.';
       }
-      // 9. CLIENTE SUMIDO / GATILHOS ANTISSUMIÇO
+      // 11. CLIENTE SUMIDO / GATILHOS ANTISSUMIÇO
       else if (p.indexOf('sumiu') !== -1 || p.indexOf('vácuo') !== -1 || p.indexOf('descarte') !== -1 || p.indexOf('bolo') !== -1) {
         r = '🛡️ Estratégia Antissumiço:\n' +
             'Vá até a aba "Antissumiço", selecione "3. Lead Sumiu Após Simulação" e clique em gerar. O script usa o gatilho do "Descarte Suave" (perguntando se pode arquivar a pasta dele). A perda iminente faz a maioria responder imediatamente!';
@@ -1202,18 +1211,19 @@
         r = '📑 Dica de Coleta de Documentos:\n' +
             'Use a opção 4 da aba Antissumiço. Ela cria urgência explicando que a taxa bancária e a reserva da Caixa têm prazo do lote semanal, motivando o envio imediato.';
       }
-      // 10. RESPOSTA PADRÃO CONTEXTUALIZADA
+      // 12. FALLBACK CONTEXTUALIZADO
       else {
-        r = 'Entendido! Estou configurado para apoiar sua rotina. Pode me perguntar sobre: \n' +
+        r = 'Compreendido! Estou configurado para apoiar sua rotina. Pode me perguntar sobre:\n' +
             '• Cotas de financiamento (Planta, Novo ou Usado)\n' +
             '• Tetos de renda e juros do MCMV ou SBPE\n' +
+            '• Regras de idade e prazo máximo\n' +
             '• Como exportar links e apresentações para o comprador.';
       }
 
       historicoContextoIA.push({ p: p, r: r });
       setTimeout(function() {
         adicionarMensagemChat('bot', r);
-      }, 280);
+      }, 250);
     }
 
     function perguntarCopiloto(topico) {
