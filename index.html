@@ -104,15 +104,15 @@
 
     /* COPILOTO IA FLUTUANTE */
     #ia-copilot-trigger { position: fixed; right: 16px; bottom: 82px; background: linear-gradient(135deg, #10b981, #059669); color: #020617; font-size: 12px; font-weight: 800; padding: 10px 14px; border-radius: 30px; display: flex; align-items: center; gap: 6px; box-shadow: 0 8px 20px rgba(16,185,129,0.4); z-index: 998; cursor: pointer; border: none; }
-    #ia-copilot-modal { display: none; position: fixed; right: 12px; bottom: 80px; width: calc(100% - 24px); max-width: 420px; height: 460px; background: #0f172a; border: 1px solid #334155; border-radius: 18px; z-index: 1001; flex-direction: column; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
+    #ia-copilot-modal { display: none; position: fixed; right: 12px; bottom: 80px; width: calc(100% - 24px); max-width: 420px; height: 500px; background: #0f172a; border: 1px solid #334155; border-radius: 18px; z-index: 1001; flex-direction: column; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.8); }
     .ia-header { background: #1e293b; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; }
     .ia-header strong { font-size: 13px; color: #34d399; display: flex; align-items: center; gap: 6px; }
     .ia-close { background: none; border: none; color: #94a3b8; font-size: 16px; cursor: pointer; }
     .ia-body { flex: 1; padding: 12px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; font-size: 12px; }
-    .ia-msg { padding: 8px 12px; border-radius: 12px; max-width: 85%; line-height: 1.4; }
+    .ia-msg { padding: 10px 12px; border-radius: 12px; max-width: 90%; line-height: 1.5; white-space: pre-line; }
     .ia-msg.bot { background: #1e293b; color: #cbd5e1; align-self: flex-start; }
     .ia-msg.user { background: #10b981; color: #020617; font-weight: 600; align-self: flex-end; }
-    .ia-quick-topics { display: flex; flex-wrap: wrap; gap: 4px; padding: 8px 12px; background: #0b1329; border-top: 1px solid #1e293b; }
+    .ia-quick-topics { display: flex; flex-wrap: wrap; gap: 5px; padding: 8px 12px; background: #0b1329; border-top: 1px solid #1e293b; }
     .ia-chip { background: #1e293b; color: #94a3b8; font-size: 10px; padding: 4px 8px; border-radius: 12px; cursor: pointer; border: 1px solid #334155; }
     .ia-input-row { display: flex; padding: 8px; background: #1e293b; border-top: 1px solid #334155; gap: 6px; }
     .ia-input-row input { flex: 1; background: #020617; border: 1px solid #334155; border-radius: 8px; color: #fff; padding: 8px 10px; font-size: 12px; }
@@ -411,22 +411,30 @@
   <button id="ia-copilot-trigger" onclick="alternarCopilotoIA()">🤖 Copiloto IA</button>
   <div id="ia-copilot-modal">
     <div class="ia-header">
-      <strong>⚡ Copiloto do Corretor (Caixa & Vendas)</strong>
+      <strong>⚡ Copiloto do Corretor (Caixa & App)</strong>
       <button class="ia-close" onclick="alternarCopilotoIA()">✕</button>
     </div>
     <div class="ia-body" id="ia-chat-messages">
       <div class="ia-msg bot">
-        Olá, corretor! Sou seu copiloto de bolso. Posso tirar dúvidas sobre cotas/taxas da Caixa[cite: 6], sugerir argumentos para fechar negócio ou ensinar como usar a vitrine.
+        Olá, corretor! Sou seu assistente de bolso. Posso tirar qualquer dúvida sobre:
+        • Regras oficiais da Caixa (cotas, tetos e taxas)[cite: 6]
+        • Idade e cálculo de prazo
+        • Como usar as ferramentas do app (Link, PDF, Vitrine)
+        • Scripts e contorno de objeções
       </div>
     </div>
     <div class="ia-quick-topics">
       <span class="ia-chip" onclick="perguntarCopiloto('Regras da Caixa')">Regras Caixa</span>
-      <span class="ia-chip" onclick="perguntarCopiloto('Cota de Usado')">Cota de Usado</span>
-      <span class="ia-chip" onclick="perguntarCopiloto('Cliente sumiu')">Cliente sumiu</span>
+      <span class="ia-chip" onclick="perguntarCopiloto('Cotas de Usado')">Cotas Usado</span>
+      <span class="ia-chip" onclick="perguntarCopiloto('Tetos de Renda')">Tetos de Renda</span>
+      <span class="ia-chip" onclick="perguntarCopiloto('Regra de Idade')">Regra Idade</span>
       <span class="ia-chip" onclick="perguntarCopiloto('Como funciona o link?')">Link Vitrine</span>
+      <span class="ia-chip" onclick="perguntarCopiloto('Exportar PDF')">Exportar PDF</span>
+      <span class="ia-chip" onclick="perguntarCopiloto('SAC vs PRICE')">SAC vs PRICE</span>
+      <span class="ia-chip" onclick="perguntarCopiloto('Cliente sumiu')">Cliente Sumiu</span>
     </div>
     <div class="ia-input-row">
-      <input type="text" id="ia-user-input" placeholder="Pergunte ao Copiloto..." onkeypress="if(event.key==='Enter') enviarMensagemCopiloto()">
+      <input type="text" id="ia-user-input" placeholder="Digite sua dúvida..." onkeypress="if(event.key==='Enter') enviarMensagemCopiloto()">
       <button onclick="enviarMensagemCopiloto()">Enviar</button>
     </div>
   </div>
@@ -1073,7 +1081,7 @@
       mostrarToast('A redirecionar para o checkout do plano ' + plano + '...');
     }
 
-    /* COPILOTO IA INTERATIVO */
+    /* COPILOTO IA - BASE DE CONHECIMENTO AMPLIADA */
     function alternarCopilotoIA() {
       var modal = document.getElementById('ia-copilot-modal');
       modal.style.display = (modal.style.display === 'flex') ? 'none' : 'flex';
@@ -1093,17 +1101,62 @@
       var r = '';
 
       if (p.indexOf('usado') !== -1) {
-        r = '📌 Cota de Usado (Caixa 2026):\n• MCMV (Fx 1 a 3): até 80%\n• Classe Média (Fx 4): até 60% (S/SE)\n• Pró-Cotista: até 60%\n• SBPE: até 80% no SAC ou 70% na PRICE[cite: 6].';
-      } else if (p.indexOf('mcmv') !== -1 || p.indexOf('teto') !== -1 || p.indexOf('regra') !== -1) {
-        r = '📌 Tetos e Taxas MCMV 2026 (S/SE/CO):\n• Faixas 1 e 2 (renda até R$ 5k): Teto R$ 275 mil, taxas de 4,25% a 6,5% a.a.\n• Faixa 3 (renda até R$ 9,6k): Teto R$ 400 mil, taxa de 7,66% a.a.[cite: 6]';
-      } else if (p.indexOf('sumiu') !== -1 || p.indexOf('vácuo') !== -1 || p.indexOf('bolo') !== -1) {
-        r = '💡 Dica Antissumiço: Use a técnica do "Descarte Suave". Pergunte se ele prefere que você arquive a ficha dele para não incomodar. 70% dos clientes respondem na hora por medo de perder a condição!';
-      } else if (p.indexOf('link') !== -1 || p.indexOf('cliente') !== -1) {
-        r = '📲 Modo Apresentação: Clique em "Copiar Link Interativo". Quando o cliente abrir, o sistema oculta seus botões e exibe as fotos em carrossel com botão direto pro seu WhatsApp.';
-      } else if (p.indexOf('sac') !== -1 || p.indexOf('price') !== -1) {
-        r = '📊 SAC vs PRICE:\n• SAC: Parcela decrescente, começa mais alta e amortiza mais rápido.\n• PRICE: Parcela fixa do início ao fim, permitindo financiar mais valor com a mesma renda.';
+        r = '📌 Cotas Oficiais para Imóveis USADOS (Caixa 2026):\n' +
+            '• MCMV (Faixas 1 a 3): até 80%[cite: 6]\n' +
+            '• Classe Média (Faixa 4): até 60% (Sul/Sudeste) ou 80% (Norte/Nordeste/Centro-Oeste)[cite: 6]\n' +
+            '• Pró-Cotista: até 60%[cite: 6]\n' +
+            '• SBPE: até 80% na SAC ou 70% na PRICE[cite: 6].';
+      } else if (p.indexOf('novo') !== -1 || p.indexOf('planta') !== -1) {
+        r = '📌 Cotas para Imóveis NOVOS ou NA PLANTA:\n' +
+            '• MCMV Faixas 1 e 2: até 90% (na SAC) ou 80% (na PRICE)[cite: 6]\n' +
+            '• MCMV Faixa 3: até 80%[cite: 6]\n' +
+            '• Classe Média (Faixa 4): até 80%[cite: 6]\n' +
+            '• Pró-Cotista: até 60%[cite: 6]\n' +
+            '• SBPE: até 80% na SAC ou 70% na PRICE[cite: 6].';
+      } else if (p.indexOf('teto') !== -1 || p.indexOf('renda') !== -1 || p.indexOf('faixa') !== -1) {
+        r = '📌 Tetos de Imóvel e Renda por Modalidade (Tabela Caixa 2026):\n' +
+            '• MCMV Faixa 1: Renda até R$ 2.850 | Imóvel até R$ 275 mil[cite: 6]\n' +
+            '• MCMV Faixa 2: Renda R$ 2.850,01 a R$ 5.000 | Imóvel até R$ 275 mil[cite: 6]\n' +
+            '• MCMV Faixa 3: Renda R$ 5.000,01 a R$ 9.600 | Imóvel até R$ 400 mil[cite: 6]\n' +
+            '• Faixa 4 (Classe Média): Renda R$ 9.600,01 a R$ 13.000 | Imóvel até R$ 600 mil[cite: 6]\n' +
+            '• Pró-Cotista: Sem limite de renda | Imóvel até R$ 500 mil[cite: 6]\n' +
+            '• SBPE: Sem limite de renda | Imóvel até R$ 2,25 milhões[cite: 6].';
+      } else if (p.indexOf('taxa') !== -1 || p.indexOf('juros') !== -1) {
+        r = '📌 Taxas de Juros Vigentes (Cotistas S/SE/CO):\n' +
+            '• MCMV Fx 1: 4,25% a 4,50% a.a.[cite: 6]\n' +
+            '• MCMV Fx 2: 4,75% a 6,50% a.a.[cite: 6]\n' +
+            '• MCMV Fx 3: 7,66% a.a.[cite: 6]\n' +
+            '• Faixa 4 (Classe Média): 10,00% a.a.[cite: 6]\n' +
+            '• Pró-Cotista: 8,66% a.a.[cite: 6]\n' +
+            '• SBPE: 10,92% a.a.[cite: 6]';
+      } else if (p.indexOf('idade') !== -1 || p.indexOf('prazo') !== -1 || p.indexOf('meses') !== -1) {
+        r = '📌 Regra de Idade e Prazo Caixa:\n' +
+            '• O prazo máximo é de 420 meses (35 anos).\n' +
+            '• Regra limitadora: A idade do comprador mais velho somada ao prazo não pode passar de 80 anos e 6 meses (80,5 anos).\n' +
+            '• Exemplo: Comprador com 50 anos pode financiar no máximo 30,5 anos (366 meses).';
+      } else if (p.indexOf('sac') !== -1 || p.indexOf('price') !== -1 || p.indexOf('amortiz') !== -1) {
+        r = '📌 Tabela SAC vs PRICE:\n' +
+            '• SAC (Decrescente): 1ª parcela é mais alta e vai caindo mês a mês. O teto de comprometimento é de 30% na primeira parcela.\n' +
+            '• PRICE (Fixa): A parcela é constante do começo ao fim. Como a 1ª parcela é menor, permite financiar um valor maior com a mesma renda.';
+      } else if (p.indexOf('link') !== -1 || p.indexOf('cliente') !== -1 || p.indexOf('vitrine') !== -1) {
+        r = '📲 Como usar o Link Interativo da Vitrine:\n' +
+            '1. Preencha os dados do imóvel e suba as fotos na aba Vitrine.\n' +
+            '2. Clique em "🔗 Copiar Link Interativo para o Cliente".\n' +
+            '3. Ao abrir o link, o cliente vê as fotos em tela cheia (com swipe pelo toque) e os seus botões de corretor ficam 100% ocultos, exibindo apenas um botão fixo no rodapé para falar no seu WhatsApp!';
+      } else if (p.indexOf('pdf') !== -1 || p.indexOf('apresenta') !== -1) {
+        r = '📄 Como funciona a Apresentação em PDF:\n' +
+            '• Ao clicar em "📄 Baixar Apresentação em PDF", o sistema gera um arquivo A4 profissional.\n' +
+            '• A página 1 traz a foto principal e ficha técnica.\n' +
+            '• As páginas seguintes trazem as outras fotos carregadas com seu contato no rodapé.';
+      } else if (p.indexOf('png') !== -1 || p.indexOf('imagem') !== -1 || p.indexOf('foto') !== -1) {
+        r = '📥 Como baixar o Card em Imagem (PNG):\n' +
+            '• O botão "📥 Baixar Card em Imagem" renderiza o card em alta resolução direto na memória do celular/PC, pronto para postar nos Stories, Feed ou Status.';
+      } else if (p.indexOf('sumiu') !== -1 || p.indexOf('bolo') !== -1 || p.indexOf('vácuo') !== -1 || p.indexOf('antissumiço') !== -1) {
+        r = '🛡️ Dicas Antissumiço:\n' +
+            '• Use o "Filtro Anti-Gasolina" 2 horas antes da visita para não perder viagem.\n' +
+            '• Se o cliente sumiu após o envio de simulação, use o script de "Descarte Suave": pergunte se ele quer arquivar a pasta para não ser incomodado. A maioria responde por medo de perder a condição!';
       } else {
-        r = 'Compreendido! Para este caso, configure os seletores da calculadora (Planta/Novo/Usado e modalidade de crédito) para validar o teto e a margem exata de 30% da renda[cite: 6].';
+        r = 'Entendido! Você pode selecionar as modalidades no topo da calculadora (MCMV, Classe Média, Pró-Cotista ou SBPE) e alternar entre Planta, Novo e Usado para aplicar os limites da Caixa[cite: 6]. Se tiver dúvida de taxas, cotas, prazos ou ferramentas do app, é só me perguntar!';
       }
 
       setTimeout(function() {
@@ -1125,7 +1178,7 @@
       processarRespostaIA(val);
     }
 
-    /* INICIALIZAÇÃO BLINDADA */
+    /* INICIALIZAÇÃO */
     window.onload = function() {
       atualizarVitrineCard();
 
