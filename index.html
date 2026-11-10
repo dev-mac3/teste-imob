@@ -97,65 +97,70 @@
   </header>
 
   <main>
-    <!-- ABA 1: CALCULADORA MCMV & PRAZO -->
+    <!-- ABA 1: QUALIFICADOR POR IMÓVEL & RENDA -->
     <section id="tab-calculator">
       <div class="card">
         <div class="card-header">
-          <h2 class="card-title">⚡ Qualificador MCMV & Prazo</h2>
-          <span class="pill">Cálculo Preciso</span>
+          <h2 class="card-title">⚡ Estudo de Financiamento</h2>
+          <span class="pill">Simulação Direta</span>
         </div>
-        <p class="card-desc">Simula subsídio até R$ 5k de renda e ajusta o prazo de até 420 meses automaticamente com a idade.</p>
+        <p class="card-desc">Informe o valor do imóvel pretendido e a renda do cliente para calcular a entrada e a parcela real.</p>
+
+        <div class="form-group">
+          <label>Valor do Imóvel Desejado (R$)</label>
+          <input type="number" inputmode="decimal" id="calc-imovel" value="240000" min="0" oninput="calculateFinanciamento(false)">
+        </div>
 
         <div class="form-group">
           <label>Renda Bruta Familiar (R$)</label>
-          <input type="number" inputmode="decimal" id="calc-income" value="3800" min="0" oninput="calculateMCMV(false)">
+          <input type="number" inputmode="decimal" id="calc-income" value="3800" min="0" oninput="calculateFinanciamento(false)">
         </div>
 
         <div class="form-row">
           <div class="form-group">
             <label>Saldo FGTS (R$)</label>
-            <input type="number" inputmode="decimal" id="calc-fgts" value="12000" min="0" oninput="calculateMCMV(false)">
+            <input type="number" inputmode="decimal" id="calc-fgts" value="12000" min="0" oninput="calculateFinanciamento(false)">
           </div>
           <div class="form-group">
             <label>Idade Comprador Mais Velho</label>
-            <input type="number" inputmode="numeric" id="calc-age" value="32" min="18" max="79" oninput="calculateMCMV(false)">
+            <input type="number" inputmode="numeric" id="calc-age" value="32" min="18" max="79" oninput="calculateFinanciamento(false)">
           </div>
         </div>
 
-        <button onclick="calculateMCMV(true)" class="btn-primary">⚡ Atualizar Estudo Completo</button>
+        <button onclick="calculateFinanciamento(true)" class="btn-primary">⚡ Atualizar Estudo Completo</button>
       </div>
 
       <div class="result-box">
         <div class="result-title">✔ Resumo Financeiro da Pasta</div>
-        <p id="res-status" class="result-status">Carregando perfil...</p>
+        <p id="res-status" class="result-status">Carregando dados...</p>
         <div class="result-grid">
           <div class="result-item">
             <span>Prazo Máximo Caixa</span>
-            <strong id="res-prazo" class="highlight">420 meses (35 anos)</strong>
-          </div>
-          <div class="result-item">
-            <span>Subsídio Estimado</span>
-            <strong id="res-subsidio" class="highlight">—</strong>
-          </div>
-          <div class="result-item">
-            <span>Financiamento Aprovável</span>
-            <strong id="res-financiamento">—</strong>
+            <strong id="res-prazo" class="highlight">420 meses</strong>
           </div>
           <div class="result-item">
             <span>Parcela Inicial Est.</span>
             <strong id="res-parcela">—</strong>
           </div>
           <div class="result-item">
-            <span>Entrada (FGTS + Subsídio)</span>
-            <strong id="res-entrada">—</strong>
+            <span>Financiamento Aprovável</span>
+            <strong id="res-financiamento">—</strong>
           </div>
           <div class="result-item">
-            <span>Poder de Compra (Imóvel até)</span>
-            <strong id="res-poder" class="highlight">—</strong>
+            <span>Entrada Restante</span>
+            <strong id="res-entrada" class="highlight">—</strong>
+          </div>
+          <div class="result-item">
+            <span>FGTS Abatido</span>
+            <strong id="res-fgts">—</strong>
+          </div>
+          <div class="result-item">
+            <span>Poder Total de Compra</span>
+            <strong id="res-poder">—</strong>
           </div>
         </div>
         <button onclick="shareCalculoWhatsApp()" class="btn-whatsapp">Copiar Resumo Formatado p/ WhatsApp</button>
-        <p class="disclaimer">Subsídio concedido apenas para rendas até R$ 5.000 (Faixas 1 e 2). Prazo limitado pela regra Caixa de idade limite (idade + prazo não excede 80 anos e 6 meses).</p>
+        <p class="disclaimer">Financiamento sujeito à aprovação de crédito bancário pela Caixa. A Caixa financia até 80% do valor de avaliação do imóvel.</p>
       </div>
     </section>
 
@@ -238,7 +243,7 @@
 
         <div class="form-group">
           <label>Destaques (separados por vírgula)</label>
-          <input type="text" id="prop-features" value="Vaga Coberta, Sacada c/ Churrasqueira, Elevador, Minha Casa Minha Vida">
+          <input type="text" id="prop-features" value="Vaga Coberta, Sacada c/ Churrasqueira, Elevador">
         </div>
 
         <div class="form-group">
@@ -251,7 +256,7 @@
 
       <div class="vitrine-card">
         <div id="prev-img" class="vitrine-img">
-          <span class="vitrine-badge">MINHA CASA MINHA VIDA</span>
+          <span class="vitrine-badge">OPORTUNIDADE</span>
           <span id="prev-photo-placeholder">[Fotografia Principal do Imóvel]</span>
         </div>
         <div class="vitrine-body">
@@ -330,9 +335,6 @@
   <div id="toast" class="toast"></div>
 
   <script>
-    /* =====================================================
-       UTILITÁRIOS E FEEDBACK VISUAL
-       ===================================================== */
     let toastTimer;
     function showToast(msg) {
       const t = document.getElementById('toast');
@@ -374,14 +376,10 @@
       return 'R$ ' + Math.round(val).toLocaleString('pt-BR');
     }
 
-    /* =====================================================
-       NAVEGAÇÃO
-       ===================================================== */
     function switchTab(tabId) {
       const tabs = ['calculator', 'agenda', 'vitrine', 'planos'];
       tabs.forEach(tab => {
-        const el = document.getElementById(`tab-${tab}`);
-        const navEl = document.getElementById(`nav-${tab}`);
+        const el = document.getElementById(`tab-${tab}`); const navEl = document.getElementById(`nav-${tab}`);
         if (el) {
           if (tab === tabId) el.classList.remove('hidden');
           else el.classList.add('hidden');
@@ -395,102 +393,92 @@
     }
 
     /* =====================================================
-       ABA 1: QUALIFICADOR MCMV COM PRAZO DINÂMICO
+       ABA 1: QUALIFICADOR POR VALOR DO IMÓVEL E RENDA
        ===================================================== */
-    function calculateMCMV(showFeedback) {
+    function calculateFinanciamento(showFeedback) {
+      const valorImovel = parseFloat(document.getElementById('calc-imovel').value) || 0;
       const income = parseFloat(document.getElementById('calc-income').value) || 0;
       const fgts = parseFloat(document.getElementById('calc-fgts').value) || 0;
       const age = parseFloat(document.getElementById('calc-age').value) || 30;
 
       const statusEl = document.getElementById('res-status');
 
-      if (income <= 0) {
-        statusEl.innerText = 'Informe uma renda bruta para simular.';
+      if (income <= 0 || valorImovel <= 0) {
+        statusEl.innerText = 'Informe o valor do imóvel e a renda para simular.';
         return;
       }
 
-      // Regra de idade da Caixa: Idade + Prazo <= 80 anos e 6 meses (80.5)
+      // Regra de idade: Idade + Prazo <= 80.5 anos
       const IDADE_LIMITE = 80.5;
       const anosDisponiveis = Math.max(0, IDADE_LIMITE - age);
       const mesesPossiveis = Math.floor(anosDisponiveis * 12);
-      
-      // Prazo máximo de 420 meses (35 anos)
       const prazoMeses = Math.min(420, Math.max(12, mesesPossiveis));
       const prazoAnos = (prazoMeses / 12).toFixed(1);
 
       document.getElementById('res-prazo').innerText = `${prazoMeses} meses (${prazoAnos} anos)`;
 
-      // Taxas e Subsídio conforme regras vigentes
-      let taxaJurosAnual = 4.5;
-      let subsidio = 0;
-      let faixaNome = '';
+      // Taxas de juros de referência
+      let taxaJurosAnual = 8.5;
+      if (income <= 2640) taxaJurosAnual = 4.5;
+      else if (income <= 4400) taxaJurosAnual = 5.5;
+      else if (income <= 8000) taxaJurosAnual = 7.66;
+      else taxaJurosAnual = 9.99;
 
-      if (income <= 2640) {
-        faixaNome = 'Faixa 1';
-        taxaJurosAnual = 4.5;
-        subsidio = 55000;
-      } else if (income <= 5000) {
-        faixaNome = 'Faixa 2';
-        taxaJurosAnual = 5.5;
-        // Subsídio decai proporcionalmente até zerar em R$ 5.000
-        const proporcao = (5000 - income) / (5000 - 2640);
-        subsidio = Math.max(0, 55000 * proporcao);
-      } else if (income <= 8000) {
-        faixaNome = 'Faixa 3';
-        taxaJurosAnual = 7.66;
-        subsidio = 0; // SEM SUBSÍDIO NA FAIXA 3
-      } else {
-        faixaNome = 'Faixa 4 / SBPE';
-        taxaJurosAnual = 9.99;
-        subsidio = 0; // SEM SUBSÍDIO
-      }
-
-      statusEl.innerText = `Enquadramento: ${faixaNome} • Taxa de Juros Ref: ${taxaJurosAnual}% a.a.`;
-
-      // Comprometimento máximo de 30% da renda
+      // Parcela máxima: 30% da renda bruta familiar
       const parcelaMax = income * 0.30;
 
-      // Cálculo de valor presente financeiro baseado no prazo real da idade
+      // Capacidade máxima teórica de financiamento pela renda (Valor Presente)
       const taxaMensal = Math.pow(1 + (taxaJurosAnual / 100), 1/12) - 1;
-      let financiamento = 0;
+      let financiamentoMaxPelaRenda = 0;
       if (taxaMensal > 0 && prazoMeses > 0) {
-        financiamento = parcelaMax * (1 - Math.pow(1 + taxaMensal, -prazoMeses)) / taxaMensal;
+        financiamentoMaxPelaRenda = parcelaMax * (1 - Math.pow(1 + taxaMensal, -prazoMeses)) / taxaMensal;
       }
 
-      const entradaSugerida = fgts + subsidio;
-      const tetoImovelEstimado = financiamento + entradaSugerida;
+      // Teto máximo de financiamento da Caixa: até 80% do valor do imóvel
+      const teto80PorCento = valorImovel * 0.80;
+      const financiamentoAprovavel = Math.min(financiamentoMaxPelaRenda, teto80PorCento);
 
-      document.getElementById('res-subsidio').innerText = subsidio > 0 ? formatBRL(subsidio) : 'R$ 0 (Sem subsídio)';
-      document.getElementById('res-financiamento').innerText = formatBRL(financiamento);
+      // Entrada Restante necessária após abater FGTS e financiamento aprovado
+      const entradaNecessaria = Math.max(0, valorImovel - financiamentoAprovavel - fgts);
+      const poderCompraTotal = financiamentoMaxPelaRenda + fgts;
+
+      if (financiamentoAprovavel < teto80PorCento) {
+        statusEl.innerHTML = `<span style="color:#fbbf24;">⚠️ Renda aprova até ${formatBRL(financiamentoAprovavel)}. A entrada precisará ser de ${formatBRL(entradaNecessaria)}.</span>`;
+      } else {
+        statusEl.innerHTML = `<span style="color:#34d399;">✔ Renda aprova o teto máximo de 80% (${formatBRL(financiamentoAprovavel)}).</span>`;
+      }
+
+      document.getElementById('res-financiamento').innerText = formatBRL(financiamentoAprovavel);
       document.getElementById('res-parcela').innerText = formatBRL(parcelaMax * 0.94) + ' /mês';
-      document.getElementById('res-entrada').innerText = formatBRL(entradaSugerida);
-      document.getElementById('res-poder').innerText = formatBRL(tetoImovelEstimado);
+      document.getElementById('res-entrada').innerText = formatBRL(entradaNecessaria);
+      document.getElementById('res-fgts').innerText = formatBRL(fgts);
+      document.getElementById('res-poder').innerText = formatBRL(poderCompraTotal);
 
       if (showFeedback) {
-        showToast('Estudo de crédito atualizado!');
+        showToast('Estudo de financiamento atualizado!');
       }
     }
 
     function shareCalculoWhatsApp() {
+      const valorImovel = document.getElementById('calc-imovel').value;
       const renda = document.getElementById('calc-income').value;
       const prazo = document.getElementById('res-prazo').innerText;
       const financ = document.getElementById('res-financiamento').innerText;
-      const sub = document.getElementById('res-subsidio').innerText;
       const parc = document.getElementById('res-parcela').innerText;
-      const poder = document.getElementById('res-poder').innerText;
       const entrada = document.getElementById('res-entrada').innerText;
+      const fgts = document.getElementById('res-fgts').innerText;
 
-      const texto = `Olá! Fiz uma pré-análise do seu perfil para financiamento habitacional:\n\n` +
-                    ` Com base na renda bruta de R$ ${renda}:\n` +
-                    ` Prazo máximo para sua idade: ${prazo}\n` +
-                    ` Poder de financiamento Caixa: até ${financ}\n` +
-                    ` Subsídio governamental: ${sub}\n` +
-                    ` Parcela mensal prevista: ${parc}\n` +
-                    ` Entrada considerada (FGTS + Subsídio): ${entrada}\n` +
-                    ` Poder de compra total: imóveis de até ${poder}\n\n` +
-                    `Vamos rodar o envio dos documentos para aprovar formalmente esta semana?`;
+      const texto = `Olá! Montei um estudo de financiamento exclusivo para o seu perfil:\n\n` +
+                    `🏢 *Imóvel pretendido:* R$ ${Number(valorImovel).toLocaleString('pt-BR')}\n` +
+                    `💼 *Renda familiar base:* R$ ${Number(renda).toLocaleString('pt-BR')}\n` +
+                    `📅 *Prazo máximo calculado:* ${prazo}\n` +
+                    `🏦 *Financiamento Caixa estimado:* até ${financ}\n` +
+                    `📉 *Parcela mensal estimada:* ${parc}\n` +
+                    `💰 *FGTS considerado:* ${fgts}\n` +
+                    `🔑 *Entrada restante necessária:* ${entrada}\n\n` +
+                    `Podemos agendar para rodar sua aprovação formal nesta semana?`;
 
-      copyText(texto, 'Resumo financeiro copiado para o WhatsApp!');
+      copyText(texto, 'Resumo copiado para o WhatsApp!');
     }
 
     /* =====================================================
@@ -516,22 +504,7 @@
       let dateFormatted = date;
       if (date) {
         const parts = date.split('-');
-        if (parts.length === 3) dateFormatted = `${parts[2]}/${parts[1]}/${parts[0]}`;
-      } else {
-        dateFormatted = 'data marcada';
-      }
-
-      let msg = '';
-
-      switch (type) {
-        case 'visita':
-          badge.innerText = 'Compromisso & Portaria';
-          msg = `Olá ${name}, tudo bem?\n\nJá reservei a minha agenda para receber você no dia ${dateFormatted} às ${time}.\n\nComo o acesso ao empreendimento exige envio prévio dos nomes na portaria e bloqueei 40 minutos exclusivos para o seu atendimento, peço a gentileza de me confirmar se está tudo mantido por aí. Caso surja algum imprevisto, me avise até 2 horas antes para eu remanejar a escala.\n\nNos vemos às ${time}!`;
-          break;
-
-        case 'duas_horas':
-          badge.innerText = 'Filtro Anti-Gasolina';
-          msg = `Fala ${name}! Passando rápido para confirmar nosso encontro hoje às ${time}.\n\nEstou organizando a rota de visitas da tarde e separando o material do imóvel. Você conseguiu manter o horário certinho ou já está a caminho?`;
+        if (parts.length === 3) dateFormatted = `${parts[2]}/${parts[1]}/${parts[0]}`; } else { dateFormatted = 'data combinada'; }  let msg = '';  switch (type) { case 'visita': badge.innerText = 'Compromisso & Portaria'; msg = `Olá ${name}, tudo bem?\n\nJá reservei a minha agenda para receber você no dia ${dateFormatted} às ${time}.\n\nComo o acesso ao empreendimento exige envio prévio dos nomes na portaria e bloqueei 40 minutos exclusivos para o seu atendimento, peço a gentileza de me confirmar se está tudo mantido por aí. Caso surja algum imprevisto, me avise até 2 horas antes para eu remanejar a escala.\n\nNos vemos às ${time}!`; break;  case 'duas_horas': badge.innerText = 'Filtro Anti-Gasolina'; msg = `Fala ${name}! Passando rápido para confirmar nosso encontro hoje às ${time}.\n\nEstou organizando a rota de visitas da tarde e separando o material do imóvel. Você conseguiu manter o horário certinho ou já está a caminho?`;
           break;
 
         case 'sumiu_simulacao':
@@ -541,7 +514,7 @@
 
         case 'documentos':
           badge.innerText = 'Urgência Bancária';
-          msg = `Olá ${name}, tudo certo?\n\nEstou com o sistema da Caixa aberto finalizando a remessa de processos desta semana. Para garantir que seu processo entre com as taxas e o subsídio que calculamos, preciso apenas daqueles últimos documentos pendentes.\n\nConsegue me mandar foto nítida por aqui hoje para não perdermos a condição segurada?`;
+          msg = `Olá ${name}, tudo certo?\n\nEstou com o sistema da Caixa aberto finalizando a remessa de processos desta semana. Para garantir que seu processo entre com as taxas e condições seguradas, preciso apenas daqueles últimos documentos pendentes.\n\nConsegue me mandar foto nítida por aqui hoje para não perdermos a vaga do correspondente?`;
           break;
 
         case 'assinatura':
@@ -556,89 +529,4 @@
 
         case 'parcela_alta':
           badge.innerText = 'Solução de Composição';
-          msg = `Oi ${name}! Pensando naqueles valores que conversamos: se a parcela inicial ficou no limite do orçamento, a gente tem a opção de fazer uma composição de renda (juntando com esposa, marido, noivo(a) ou até familiar de primeiro grau).\n\nIsso aumenta o prazo, dilui a parcela e muitas vezes destrava mais subsídio. Tem alguém que toparia compor com você para deixar o valor bem leve?`;
-          break;
-
-        case 'medo_divida':
-          badge.innerText = 'Custo da Inação';
-          msg = `Fala ${name}, compreendo totalmente o receio de assumir um compromisso de longo prazo, é normal na compra do primeiro imóvel.\n\nMas pensa comigo: a parcela do financiamento amortiza uma dívida que vira patrimônio seu e congela, enquanto o aluguel sobe todo ano pelo IGP-M e no fim de 5 anos você pagou R$ 90 mil sem ter nada no seu nome.\n\nVale a pena vermos uma condição onde a parcela fique rigorosamente igual ao que você já pagaria de aluguel?`;
-          break;
-      }
-
-      document.getElementById('script-text').innerText = msg;
-      showToast('Mensagem gerada com sucesso!');
-    }
-
-    function copyScript() {
-      const text = document.getElementById('script-text').innerText;
-      copyText(text, 'Script copiado!');
-    }
-
-    /* =====================================================
-       ABA 3: VITRINE EXPRESS
-       ===================================================== */
-    function loadPhoto(input) {
-      if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          const imgBox = document.getElementById('prev-img');
-          imgBox.style.backgroundImage = `url('${e.target.result}')`;
-          document.getElementById('prev-photo-placeholder').style.display = 'none';
-          showToast('Foto do imóvel carregada!');
-        };
-        reader.readAsDataURL(input.files[0]);
-      }
-    }
-
-    function updateVitrine(showFeedback) {
-      const title = document.getElementById('prop-title').value;
-      const price = document.getElementById('prop-price').value;
-      const loc = document.getElementById('prop-location').value;
-      const feats = document.getElementById('prop-features').value.split(',');
-
-      document.getElementById('prev-title').innerText = title;
-      document.getElementById('prev-price').innerText = price;
-      document.getElementById('prev-location').innerText = '📍 ' + loc;
-
-      const container = document.getElementById('prev-badges');
-      container.innerHTML = '';
-      feats.forEach(f => {
-        if (f.trim()) {
-          const span = document.createElement('span');
-          span.className = 'tag-item';
-          span.innerText = f.trim();
-          container.appendChild(span);
-        }
-      });
-
-      if (showFeedback) showToast('Vitrine atualizada!');
-    }
-
-    function copyVitrine() {
-      const title = document.getElementById('prev-title').innerText;
-      const price = document.getElementById('prev-price').innerText;
-      const loc = document.getElementById('prev-location').innerText;
-      const badges = Array.from(document.querySelectorAll('#prev-badges .tag-item')).map(b => '✔ ' + b.innerText).join('\n');
-
-      const texto = `🏢 *${title}*\n` +
-                    `💰 Valor: ${price}\n` +
-                    `${loc}\n\n` +
-                    `*Destaques do Imóvel:*\n${badges}\n\n` +
-                    `Deseja simular o valor de entrada e as parcelas para o seu perfil? Me responda aqui!`;
-
-      copyText(texto, 'Texto do imóvel copiado!');
-    }
-
-    /* =====================================================
-       PLANOS & CHECKOUT
-       ===================================================== */
-    function choosePlan(planKey) {
-      showToast('Conectando ao checkout...');
-    }
-
-    // Inicialização automática
-    calculateMCMV(false);
-    updateVitrine(false);
-  </script>
-</body>
-</html>
+          msg = `Oi ${name}! Pens
